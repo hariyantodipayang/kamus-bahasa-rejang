@@ -4,1492 +4,1012 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kamus Bahasa Rejang & Aksara Kaganga</title>
-<meta name="description" content="Kamus digital Bahasa Rejang dengan 5 dialek (Lebong, Rejang Lebong, Kepahiang, Bengkulu Utara, Bengkulu Tengah) dan aksara Kaganga interaktif.">
+<meta name="description" content="Kamus digital Bahasa Rejang — 250+ kata, 5 dialek, aksara Kaganga, terjemahan Inggris.">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Rejang&family=Poppins:wght@300;400;500;600;700&display=swap');
-
-  :root {
-    --coklat-tua: #3D1A00;
-    --coklat: #7B3F00;
-    --emas: #C8922A;
-    --emas-muda: #F0C060;
-    --krem: #FDF6E3;
-    --putih: #FFFFFF;
-    --abu: #6B7280;
-    --abu-muda: #F3F4F6;
-    --merah: #DC2626;
-    --hijau: #16A34A;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--krem);
-    color: var(--coklat-tua);
-    min-height: 100vh;
-  }
-
-  /* HEADER */
-  header {
-    background: linear-gradient(135deg, var(--coklat-tua) 0%, var(--coklat) 60%, #5a2d00 100%);
-    color: var(--emas-muda);
-    padding: 20px 24px 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(61,26,0,0.4);
-  }
-
-  .header-top {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-
-  .logo {
-    font-size: 2.4rem;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-    flex-shrink: 0;
-  }
-
-  .header-title h1 {
-    font-size: clamp(1rem, 4vw, 1.5rem);
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--emas-muda);
-  }
-
-  .header-title p {
-    font-size: 0.78rem;
-    opacity: 0.8;
-    margin-top: 2px;
-    color: #e8d5a0;
-  }
-
-  .kaganga-display {
-    font-family: 'Noto Sans Rejang', serif;
-    font-size: 1.6rem;
-    letter-spacing: 4px;
-    color: var(--emas);
-    opacity: 0.7;
-    margin-top: 2px;
-  }
-
-  /* NAV TABS */
-  nav {
-    display: flex;
-    gap: 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  nav::-webkit-scrollbar { display: none; }
-
-  nav button {
-    background: transparent;
-    border: none;
-    color: rgba(240,192,96,0.6);
-    padding: 10px 16px;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  nav button:hover {
-    color: var(--emas-muda);
-    background: rgba(255,255,255,0.05);
-  }
-
-  nav button.aktif {
-    color: var(--emas-muda);
-    border-bottom-color: var(--emas);
-    background: rgba(200,146,42,0.1);
-  }
-
-  /* MAIN */
-  main {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 24px 16px;
-  }
-
-  .tab-panel { display: none; }
-  .tab-panel.aktif { display: block; animation: fadeIn 0.3s ease; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* SECTION TITLE */
-  .section-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--coklat);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* SEARCH BOX */
-  .search-area {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
-    margin-bottom: 20px;
-  }
-
-  .search-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-
-  .search-input {
-    flex: 1;
-    min-width: 200px;
-    border: 2px solid #e5d5bc;
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-    background: var(--krem);
-    color: var(--coklat-tua);
-  }
-
-  .search-input:focus {
-    border-color: var(--emas);
-    background: white;
-  }
-
-  .filter-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .filter-label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--abu);
-  }
-
-  select {
-    border: 2px solid #e5d5bc;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    background: var(--krem);
-    color: var(--coklat-tua);
-    outline: none;
-    cursor: pointer;
-  }
-
-  select:focus { border-color: var(--emas); }
-
-  .chip-group {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-
-  .chip {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    border: 2px solid #e5d5bc;
-    background: white;
-    color: var(--abu);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .chip:hover, .chip.aktif {
-    background: var(--emas);
-    border-color: var(--emas);
-    color: white;
-  }
-
-  /* WORD CARDS */
-  .results-count {
-    font-size: 0.8rem;
-    color: var(--abu);
-    margin-bottom: 12px;
-  }
-
-  .word-grid {
-    display: grid;
-    gap: 12px;
-  }
-
-  .word-card {
-    background: white;
-    border-radius: 14px;
-    padding: 16px 20px;
-    box-shadow: 0 2px 8px rgba(61,26,0,0.06);
-    border-left: 4px solid var(--emas);
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-
-  .word-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(61,26,0,0.12);
-  }
-
-  .word-indonesia {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--coklat-tua);
-    margin-bottom: 4px;
-  }
-
-  .word-kategori {
-    display: inline-block;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    background: var(--emas-muda);
-    color: var(--coklat);
-    border-radius: 10px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-
-  .dialek-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 8px;
-  }
-
-  .dialek-item {
-    background: var(--krem);
-    border-radius: 10px;
-    padding: 10px 12px;
-  }
-
-  .dialek-nama {
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--abu);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-
-  .dialek-kata {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--coklat);
-  }
-
-  .dialek-kaganga {
-    font-family: 'Noto Sans Rejang', serif;
-    font-size: 1.2rem;
-    color: var(--emas);
-    margin-top: 2px;
-    line-height: 1.8;
-  }
-
-  .dialek-ipa {
-    font-size: 0.72rem;
-    color: var(--abu);
-    font-style: italic;
-  }
-
-  /* KAGANGA TABLE */
-  .kaganga-section {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
-    margin-bottom: 20px;
-  }
-
-  .subsection-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--coklat);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--emas-muda);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .char-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .char-card {
-    background: var(--krem);
-    border-radius: 12px;
-    padding: 14px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.15s;
-    border: 2px solid transparent;
-    position: relative;
-  }
-
-  .char-card:hover {
-    background: var(--emas-muda);
-    border-color: var(--emas);
-    transform: translateY(-2px);
-  }
-
-  .char-big {
-    font-family: 'Noto Sans Rejang', serif;
-    font-size: 2.5rem;
-    color: var(--coklat-tua);
-    line-height: 1.4;
-    display: block;
-  }
-
-  .char-latin {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--coklat);
-    margin-top: 4px;
-  }
-
-  .char-nama {
-    font-size: 0.7rem;
-    color: var(--abu);
-    margin-top: 2px;
-  }
-
-  .char-unicode {
-    font-size: 0.65rem;
-    color: #aaa;
-    margin-top: 2px;
-    font-family: monospace;
-  }
-
-  /* INFO PANEL */
-  .info-banner {
-    background: linear-gradient(135deg, var(--coklat-tua), var(--coklat));
-    color: var(--emas-muda);
-    border-radius: 14px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
-  }
-
-  .info-banner h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .info-banner p {
-    font-size: 0.82rem;
-    opacity: 0.85;
-    line-height: 1.6;
-  }
-
-  /* CONVERTER */
-  .converter-box {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
-    margin-bottom: 20px;
-  }
-
-  .converter-cols {
-    display: grid;
-    grid-template-columns: 1fr 40px 1fr;
-    gap: 12px;
-    align-items: start;
-  }
-
-  @media (max-width: 500px) {
-    .converter-cols {
-      grid-template-columns: 1fr;
-    }
-    .arrow-col { display: none; }
-  }
-
-  .converter-textarea {
-    width: 100%;
-    height: 140px;
-    border: 2px solid #e5d5bc;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
-    resize: vertical;
-    outline: none;
-    background: var(--krem);
-    transition: border-color 0.2s;
-  }
-
-  .converter-textarea:focus { border-color: var(--emas); background: white; }
-
-  .converter-output {
-    font-family: 'Noto Sans Rejang', serif;
-    font-size: 1.6rem;
-    line-height: 2;
-    color: var(--coklat-tua);
-    background: var(--krem);
-    border: 2px solid #e5d5bc;
-    border-radius: 12px;
-    padding: 12px 14px;
-    min-height: 140px;
-    word-break: break-all;
-  }
-
-  .arrow-col {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 50px;
-    font-size: 1.5rem;
-    color: var(--emas);
-  }
-
-  .converter-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--abu);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.15s;
-  }
-
-  .btn-primary {
-    background: var(--emas);
-    color: white;
-  }
-
-  .btn-primary:hover { background: var(--coklat); }
-
-  .btn-outline {
-    background: transparent;
-    border: 2px solid var(--emas);
-    color: var(--coklat);
-  }
-
-  .btn-outline:hover { background: var(--emas-muda); }
-
-  .btn-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-  }
-
-  /* PANDUAN PENULISAN */
-  .rule-list {
-    display: grid;
-    gap: 10px;
-  }
-
-  .rule-item {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 12px;
-    background: var(--krem);
-    border-radius: 10px;
-    padding: 10px 14px;
-    align-items: center;
-  }
-
-  .rule-latin {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--coklat);
-    font-family: monospace;
-  }
-
-  .rule-kaganga {
-    font-family: 'Noto Sans Rejang', serif;
-    font-size: 1.4rem;
-    color: var(--emas);
-    margin-right: 10px;
-  }
-
-  .rule-desc {
-    font-size: 0.82rem;
-    color: var(--abu);
-  }
-
-  /* KUIS */
-  .kuis-card {
-    background: white;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .kuis-pertanyaan {
-    font-size: 1rem;
-    color: var(--abu);
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-
-  .kuis-target {
-    font-family: 'Noto Sans Rejang', serif;
-    font-size: 4rem;
-    color: var(--coklat-tua);
-    margin: 16px 0;
-    line-height: 1.4;
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .kuis-target.kata {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.2rem;
-  }
-
-  .kuis-pilihan {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    max-width: 480px;
-    margin: 20px auto 0;
-  }
-
-  .kuis-btn {
-    padding: 14px 10px;
-    border-radius: 12px;
-    border: 2px solid #e5d5bc;
-    background: var(--krem);
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--coklat-tua);
-  }
-
-  .kuis-btn:hover:not(:disabled) {
-    border-color: var(--emas);
-    background: var(--emas-muda);
-  }
-
-  .kuis-btn.benar {
-    background: #dcfce7;
-    border-color: var(--hijau);
-    color: #166534;
-  }
-
-  .kuis-btn.salah {
-    background: #fee2e2;
-    border-color: var(--merah);
-    color: #991b1b;
-  }
-
-  .kuis-btn:disabled { cursor: not-allowed; opacity: 0.8; }
-
-  .skor-panel {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-
-  .skor-item {
-    text-align: center;
-    background: var(--krem);
-    border-radius: 12px;
-    padding: 10px 20px;
-  }
-
-  .skor-angka {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--coklat);
-  }
-
-  .skor-label {
-    font-size: 0.7rem;
-    color: var(--abu);
-    text-transform: uppercase;
-  }
-
-  .feedback-msg {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-top: 12px;
-    min-height: 28px;
-    transition: all 0.2s;
-  }
-
-  .feedback-msg.benar { color: var(--hijau); }
-  .feedback-msg.salah { color: var(--merah); }
-
-  .kuis-mode-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 24px 16px;
-    color: var(--abu);
-    font-size: 0.78rem;
-    border-top: 1px solid #e5d5bc;
-    margin-top: 20px;
-  }
-
-  footer a {
-    color: var(--emas);
-    text-decoration: none;
-  }
-
-  footer a:hover { text-decoration: underline; }
-
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: var(--abu);
-  }
-
-  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
-  .empty-state p { font-size: 0.9rem; }
-
-  .badge-dialek {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 0.68rem;
-    font-weight: 600;
-    background: var(--coklat);
-    color: white;
-    margin-left: 6px;
-  }
-
-  .progress-bar {
-    height: 6px;
-    background: #e5d5bc;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--emas);
-    border-radius: 4px;
-    transition: width 0.3s;
-  }
-
-  /* TOOLTIP */
-  .char-card:hover .char-contoh {
-    display: block;
-  }
-
-  .char-contoh {
-    display: none;
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--coklat-tua);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.72rem;
-    white-space: nowrap;
-    z-index: 10;
-    line-height: 1.5;
-    min-width: 150px;
-    text-align: left;
-    pointer-events: none;
-  }
-
-  .char-contoh::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: var(--coklat-tua);
-  }
-
-  .vokal-display {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.4rem;
-  }
-
-  .vokal-before {
-    font-family: 'Noto Sans Rejang', serif;
-    color: var(--abu);
-  }
-
-  .vokal-mark {
-    font-family: 'Noto Sans Rejang', serif;
-    color: var(--emas);
-    font-size: 1.2rem;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Rejang&family=Poppins:wght@300;400;500;600;700&display=swap');
+:root{--coklat-tua:#3D1A00;--coklat:#7B3F00;--emas:#C8922A;--emas-muda:#F0C060;--krem:#FDF6E3;--putih:#FFF;--abu:#6B7280;--abu-muda:#F3F4F6;--merah:#DC2626;--hijau:#16A34A;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Poppins',sans-serif;background:var(--krem);color:var(--coklat-tua);min-height:100vh;}
+header{background:linear-gradient(135deg,var(--coklat-tua) 0%,var(--coklat) 60%,#5a2d00 100%);color:var(--emas-muda);padding:18px 20px 0;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(61,26,0,.4);}
+.header-top{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.logo{font-size:2.2rem;flex-shrink:0;}
+.header-title h1{font-size:clamp(.95rem,3.5vw,1.4rem);font-weight:700;line-height:1.2;color:var(--emas-muda);}
+.header-title p{font-size:.76rem;opacity:.8;margin-top:2px;color:#e8d5a0;}
+.kaganga-display{font-family:'Noto Sans Rejang',serif;font-size:1.5rem;letter-spacing:4px;color:var(--emas);opacity:.7;margin-top:2px;}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+nav button{background:transparent;border:none;color:rgba(240,192,96,.6);padding:9px 14px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:500;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+nav button:hover{color:var(--emas-muda);background:rgba(255,255,255,.05);}
+nav button.aktif{color:var(--emas-muda);border-bottom-color:var(--emas);background:rgba(200,146,42,.1);}
+main{max-width:960px;margin:0 auto;padding:20px 14px;}
+.tab-panel{display:none;}
+.tab-panel.aktif{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.search-area{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(61,26,0,.08);margin-bottom:18px;}
+.search-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.search-input{flex:1;min-width:200px;border:2px solid #e5d5bc;border-radius:10px;padding:10px 14px;font-size:.95rem;font-family:'Poppins',sans-serif;outline:none;transition:border-color .2s;background:var(--krem);color:var(--coklat-tua);}
+.search-input:focus{border-color:var(--emas);background:#fff;}
+select{border:2px solid #e5d5bc;border-radius:8px;padding:6px 10px;font-family:'Poppins',sans-serif;font-size:.82rem;background:var(--krem);color:var(--coklat-tua);outline:none;cursor:pointer;}
+select:focus{border-color:var(--emas);}
+.filter-label{font-size:.78rem;font-weight:500;color:var(--abu);margin-bottom:6px;}
+.chip-group{display:flex;gap:5px;flex-wrap:wrap;}
+.chip{padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:500;border:2px solid #e5d5bc;background:#fff;color:var(--abu);cursor:pointer;transition:all .15s;}
+.chip:hover,.chip.aktif{background:var(--emas);border-color:var(--emas);color:#fff;}
+.results-count{font-size:.78rem;color:var(--abu);margin-bottom:10px;}
+.word-grid{display:grid;gap:10px;}
+.word-card{background:#fff;border-radius:14px;padding:14px 18px;box-shadow:0 2px 8px rgba(61,26,0,.06);border-left:4px solid var(--emas);transition:transform .15s,box-shadow .15s;}
+.word-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(61,26,0,.12);}
+.word-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+.word-indonesia{font-size:1.05rem;font-weight:700;color:var(--coklat-tua);}
+.word-english{font-size:.82rem;color:var(--abu);font-style:italic;margin-top:1px;}
+.word-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.word-kategori{display:inline-block;font-size:.67rem;padding:2px 7px;background:var(--emas-muda);color:var(--coklat);border-radius:8px;font-weight:600;}
+.dialek-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;}
+.dialek-item{background:var(--krem);border-radius:10px;padding:9px 11px;}
+.dialek-nama{font-size:.64rem;font-weight:600;color:var(--abu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+.dialek-kata{font-size:.95rem;font-weight:600;color:var(--coklat);}
+.dialek-kaganga{font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas);margin-top:1px;line-height:1.8;}
+.dialek-ipa{font-size:.68rem;color:var(--abu);font-style:italic;}
+.kaganga-section{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(61,26,0,.08);margin-bottom:18px;}
+.subsection-title{font-size:.95rem;font-weight:600;color:var(--coklat);margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid var(--emas-muda);display:flex;align-items:center;gap:7px;}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:18px;}
+.char-card{background:var(--krem);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;border:2px solid transparent;position:relative;}
+.char-card:hover{background:var(--emas-muda);border-color:var(--emas);transform:translateY(-2px);}
+.char-big{font-family:'Noto Sans Rejang',serif;font-size:2.3rem;color:var(--coklat-tua);line-height:1.4;display:block;}
+.char-latin{font-size:.82rem;font-weight:700;color:var(--coklat);margin-top:3px;}
+.char-nama{font-size:.67rem;color:var(--abu);margin-top:1px;}
+.char-unicode{font-size:.62rem;color:#aaa;margin-top:1px;font-family:monospace;}
+.char-contoh{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--coklat-tua);color:#fff;padding:8px 12px;border-radius:8px;font-size:.7rem;white-space:nowrap;z-index:10;line-height:1.5;min-width:160px;text-align:left;pointer-events:none;}
+.char-contoh::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--coklat-tua);}
+.char-card:hover .char-contoh{display:block;}
+.info-banner{background:linear-gradient(135deg,var(--coklat-tua),var(--coklat));color:var(--emas-muda);border-radius:14px;padding:14px 18px;margin-bottom:18px;}
+.info-banner h3{font-size:.95rem;font-weight:600;margin-bottom:5px;}
+.info-banner p{font-size:.8rem;opacity:.85;line-height:1.6;}
+.converter-box{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 12px rgba(61,26,0,.08);margin-bottom:18px;}
+.converter-cols{display:grid;grid-template-columns:1fr 36px 1fr;gap:10px;align-items:start;}
+@media(max-width:500px){.converter-cols{grid-template-columns:1fr}.arrow-col{display:none}}
+.converter-textarea{width:100%;height:130px;border:2px solid #e5d5bc;border-radius:10px;padding:10px 12px;font-family:'Poppins',sans-serif;font-size:.9rem;resize:vertical;outline:none;background:var(--krem);transition:border-color .2s;}
+.converter-textarea:focus{border-color:var(--emas);background:#fff;}
+.converter-output{font-family:'Noto Sans Rejang',serif;font-size:1.5rem;line-height:2;color:var(--coklat-tua);background:var(--krem);border:2px solid #e5d5bc;border-radius:10px;padding:10px 12px;min-height:130px;word-break:break-all;}
+.arrow-col{display:flex;align-items:center;justify-content:center;padding-top:46px;font-size:1.4rem;color:var(--emas);}
+.converter-label{font-size:.76rem;font-weight:600;color:var(--abu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;transition:all .15s;}
+.btn-primary{background:var(--emas);color:#fff;}
+.btn-primary:hover{background:var(--coklat);}
+.btn-outline{background:transparent;border:2px solid var(--emas);color:var(--coklat);}
+.btn-outline:hover{background:var(--emas-muda);}
+.btn-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.rule-list{display:grid;gap:8px;}
+.rule-item{display:grid;grid-template-columns:90px 1fr;gap:10px;background:var(--krem);border-radius:10px;padding:9px 12px;align-items:center;}
+.rule-latin{font-size:.9rem;font-weight:700;color:var(--coklat);font-family:monospace;}
+.rule-kaganga{font-family:'Noto Sans Rejang',serif;font-size:1.3rem;color:var(--emas);margin-right:8px;}
+.rule-desc{font-size:.8rem;color:var(--abu);}
+.kuis-card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 12px rgba(61,26,0,.08);margin-bottom:18px;text-align:center;}
+.kuis-pertanyaan{font-size:.95rem;color:var(--abu);margin-bottom:6px;font-weight:500;}
+.kuis-target{font-family:'Noto Sans Rejang',serif;font-size:3.6rem;color:var(--coklat-tua);margin:14px 0;line-height:1.4;min-height:72px;display:flex;align-items:center;justify-content:center;}
+.kuis-target.kata{font-family:'Poppins',sans-serif;font-size:2rem;}
+.kuis-pilihan{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:480px;margin:16px auto 0;}
+.kuis-btn{padding:12px 8px;border-radius:10px;border:2px solid #e5d5bc;background:var(--krem);font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s;color:var(--coklat-tua);}
+.kuis-btn:hover:not(:disabled){border-color:var(--emas);background:var(--emas-muda);}
+.kuis-btn.benar{background:#dcfce7;border-color:var(--hijau);color:#166534;}
+.kuis-btn.salah{background:#fee2e2;border-color:var(--merah);color:#991b1b;}
+.kuis-btn:disabled{cursor:not-allowed;opacity:.8;}
+.skor-panel{display:flex;justify-content:center;gap:20px;margin-bottom:14px;flex-wrap:wrap;}
+.skor-item{text-align:center;background:var(--krem);border-radius:12px;padding:8px 18px;}
+.skor-angka{font-size:1.7rem;font-weight:700;color:var(--coklat);}
+.skor-label{font-size:.67rem;color:var(--abu);text-transform:uppercase;}
+.feedback-msg{font-size:.95rem;font-weight:600;margin-top:10px;min-height:24px;}
+.feedback-msg.benar{color:var(--hijau);}
+.feedback-msg.salah{color:var(--merah);}
+.kuis-mode-row{display:flex;gap:7px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
+.progress-bar{height:5px;background:#e5d5bc;border-radius:4px;overflow:hidden;margin-bottom:18px;}
+.progress-fill{height:100%;background:var(--emas);border-radius:4px;transition:width .3s;}
+.empty-state{text-align:center;padding:36px;color:var(--abu);}
+.empty-state .icon{font-size:2.6rem;margin-bottom:10px;}
+.stats-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+.stat-chip{background:#fff;border-radius:10px;padding:8px 14px;box-shadow:0 1px 6px rgba(61,26,0,.07);font-size:.78rem;font-weight:500;color:var(--coklat);}
+.stat-chip span{font-size:1.1rem;font-weight:700;color:var(--emas);display:block;}
+footer{text-align:center;padding:20px 14px;color:var(--abu);font-size:.75rem;border-top:1px solid #e5d5bc;margin-top:16px;}
+footer a{color:var(--emas);text-decoration:none;}
+footer a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-top">
     <div class="logo">📖</div>
     <div class="header-title">
       <h1>Kamus Bahasa Rejang & Aksara Kaganga</h1>
       <p>Lebong · Rejang Lebong · Kepahiang · Bengkulu Utara · Bengkulu Tengah</p>
-      <div class="kaganga-display">ꤰꤱꤲꤳꤴꤵ</div>
+      <div class="kaganga-display">ꤰꤱꤲꤳꤴꤵꤶꤷꤸ</div>
     </div>
   </div>
   <nav>
-    <button class="aktif" onclick="gantiTab('kamus', this)">📚 Kamus</button>
-    <button onclick="gantiTab('kaganga', this)">🔤 Huruf Kaganga</button>
-    <button onclick="gantiTab('konverter', this)">🔄 Konverter</button>
-    <button onclick="gantiTab('kuis', this)">🎯 Kuis</button>
-    <button onclick="gantiTab('tentang', this)">ℹ️ Tentang</button>
+    <button class="aktif" onclick="gantiTab('kamus',this)">📚 Kamus</button>
+    <button onclick="gantiTab('kaganga',this)">🔤 Kaganga</button>
+    <button onclick="gantiTab('konverter',this)">🔄 Konverter</button>
+    <button onclick="gantiTab('kuis',this)">🎯 Kuis</button>
+    <button onclick="gantiTab('tentang',this)">ℹ️ Tentang</button>
   </nav>
 </header>
 
 <main>
 
-  <!-- ===== TAB KAMUS ===== -->
-  <div id="tab-kamus" class="tab-panel aktif">
-    <div class="search-area">
-      <div class="search-row">
-        <input type="text" class="search-input" id="searchInput"
-          placeholder="Cari kata dalam Bahasa Indonesia atau Rejang..."
-          oninput="cariKata()" autofocus>
-        <select id="dialekFilter" onchange="cariKata()">
-          <option value="semua">Semua Dialek</option>
-          <option value="lebong">Lebong</option>
-          <option value="rejang_lebong">Rejang Lebong</option>
-          <option value="kepahiang">Kepahiang</option>
-          <option value="bengkulu_utara">Bengkulu Utara</option>
-          <option value="bengkulu_tengah">Bengkulu Tengah</option>
-        </select>
-      </div>
-      <div class="filter-label">Kategori:</div>
-      <div class="chip-group" id="chipKategori">
-        <div class="chip aktif" onclick="filterKategori('semua', this)">Semua</div>
-        <div class="chip" onclick="filterKategori('angka', this)">Angka</div>
-        <div class="chip" onclick="filterKategori('keluarga', this)">Keluarga</div>
-        <div class="chip" onclick="filterKategori('kegiatan', this)">Kegiatan</div>
-        <div class="chip" onclick="filterKategori('alam', this)">Alam</div>
-        <div class="chip" onclick="filterKategori('sifat', this)">Sifat</div>
-        <div class="chip" onclick="filterKategori('tubuh', this)">Tubuh</div>
-        <div class="chip" onclick="filterKategori('kata_ganti', this)">Kata Ganti</div>
-        <div class="chip" onclick="filterKategori('ungkapan', this)">Ungkapan</div>
-      </div>
+<!-- ===== KAMUS ===== -->
+<div id="tab-kamus" class="tab-panel aktif">
+  <div class="search-area">
+    <div class="search-row">
+      <input type="text" class="search-input" id="searchInput"
+        placeholder="Cari dalam Bahasa Indonesia, Inggris, atau Rejang..."
+        oninput="cariKata()">
+      <select id="dialekFilter" onchange="cariKata()">
+        <option value="semua">Semua Dialek</option>
+        <option value="lebong">Lebong</option>
+        <option value="rejang_lebong">Rejang Lebong</option>
+        <option value="kepahiang">Kepahiang</option>
+        <option value="bengkulu_utara">Bengkulu Utara</option>
+        <option value="bengkulu_tengah">Bengkulu Tengah</option>
+      </select>
     </div>
-
-    <div class="results-count" id="resultsCount"></div>
-    <div class="word-grid" id="wordGrid"></div>
-  </div>
-
-  <!-- ===== TAB KAGANGA ===== -->
-  <div id="tab-kaganga" class="tab-panel">
-    <div class="info-banner">
-      <h3>🏛️ Aksara Kaganga — Warisan Leluhur Rejang</h3>
-      <p>Aksara Kaganga adalah sistem tulisan tradisional masyarakat Rejang, Bengkulu. Termasuk dalam kelompok aksara Abugida — setiap huruf konsonan mengandung bunyi vokal 'a' bawaan. Terdaftar dalam standar Unicode blok U+A930–U+A95F sejak tahun 2009.</p>
-    </div>
-
-    <div class="kaganga-section">
-      <div class="subsection-title">🔤 Konsonan (23 huruf)</div>
-      <div class="char-grid" id="gridKonsonan"></div>
-
-      <div class="subsection-title">🔵 Tanda Vokal (Diakritik)</div>
-      <p style="font-size:0.82rem;color:var(--abu);margin-bottom:14px;">Vokal selain 'a' dituliskan sebagai tanda yang diletakkan di atas atau bawah konsonan. Vokal 'a' adalah vokal bawaan dan tidak memerlukan tanda.</p>
-      <div class="char-grid" id="gridVokal"></div>
-
-      <div class="subsection-title">🔢 Angka Rejang</div>
-      <div class="char-grid" id="gridAngka"></div>
-    </div>
-
-    <div class="kaganga-section">
-      <div class="subsection-title">📌 Cara Membaca & Menulis</div>
-      <div class="rule-list">
-        <div class="rule-item">
-          <div>
-            <div class="rule-latin">Arah</div>
-          </div>
-          <div class="rule-desc">Ditulis dari kiri ke kanan, seperti tulisan Latin.</div>
-        </div>
-        <div class="rule-item">
-          <div>
-            <div class="rule-latin">Vokal 'a'</div>
-          </div>
-          <div class="rule-desc">Sudah terkandung dalam setiap konsonan. "Ka" = <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꤰ</span>, bukan ditambah tanda vokal lagi.</div>
-        </div>
-        <div class="rule-item">
-          <div>
-            <div class="rule-latin">Vokal lain</div>
-          </div>
-          <div class="rule-desc">Ditambahkan sebagai diakritik setelah konsonan. "Ki" = <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꤰꥇ</span></div>
-        </div>
-        <div class="rule-item">
-          <div>
-            <div class="rule-latin">Konsonan mati</div>
-          </div>
-          <div class="rule-desc">Ditandai dengan virama <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꥍ</span>. Contoh: "pak" = <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꤶꤰꥍ</span></div>
-        </div>
-        <div class="rule-item">
-          <div>
-            <div class="rule-latin">Font</div>
-          </div>
-          <div class="rule-desc">Gunakan font "Noto Sans Rejang" (Google Fonts) untuk tampilan terbaik di perangkat digital.</div>
-        </div>
-      </div>
+    <div class="filter-label">Kategori:</div>
+    <div class="chip-group" id="chipKategori">
+      <div class="chip aktif" onclick="filterKat('semua',this)">Semua</div>
+      <div class="chip" onclick="filterKat('angka',this)">🔢 Angka</div>
+      <div class="chip" onclick="filterKat('keluarga',this)">👨‍👩‍👧 Keluarga</div>
+      <div class="chip" onclick="filterKat('tubuh',this)">🫀 Tubuh</div>
+      <div class="chip" onclick="filterKat('alam',this)">🌿 Alam</div>
+      <div class="chip" onclick="filterKat('hewan',this)">🐾 Hewan</div>
+      <div class="chip" onclick="filterKat('makanan',this)">🍚 Makanan</div>
+      <div class="chip" onclick="filterKat('kegiatan',this)">🏃 Kegiatan</div>
+      <div class="chip" onclick="filterKat('sifat',this)">💫 Sifat</div>
+      <div class="chip" onclick="filterKat('waktu',this)">⏰ Waktu</div>
+      <div class="chip" onclick="filterKat('perasaan',this)">❤️ Perasaan</div>
+      <div class="chip" onclick="filterKat('tempat',this)">🏘️ Tempat</div>
+      <div class="chip" onclick="filterKat('arah',this)">🧭 Arah</div>
+      <div class="chip" onclick="filterKat('kata_ganti',this)">🗣️ Kata Ganti</div>
+      <div class="chip" onclick="filterKat('kata_tanya',this)">❓ Kata Tanya</div>
+      <div class="chip" onclick="filterKat('ungkapan',this)">💬 Ungkapan</div>
+      <div class="chip" onclick="filterKat('lain',this)">📌 Lain-lain</div>
     </div>
   </div>
 
-  <!-- ===== TAB KONVERTER ===== -->
-  <div id="tab-konverter" class="tab-panel">
-    <div class="info-banner">
-      <h3>🔄 Konverter Latin → Kaganga</h3>
-      <p>Ketik teks Bahasa Rejang dalam ejaan Latin, dan lihat konversinya ke aksara Kaganga secara otomatis. Konverter ini menggunakan pemetaan fonetik dasar — cocok untuk belajar dan eksplorasi.</p>
-    </div>
-
-    <div class="converter-box">
-      <div class="converter-cols">
-        <div>
-          <div class="converter-label">Teks Latin (Ejaan Rejang)</div>
-          <textarea class="converter-textarea" id="inputLatin"
-            placeholder="Contoh: wai, uku, telo, lemak..."
-            oninput="konversiTeks()"></textarea>
-        </div>
-        <div class="arrow-col">→</div>
-        <div>
-          <div class="converter-label">Aksara Kaganga</div>
-          <div class="converter-output" id="outputKaganga">—</div>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="konversiContoh('wai duei telo')">Contoh: Angka</button>
-        <button class="btn btn-primary" onclick="konversiContoh('uku lop umeak')">Contoh: Kalimat</button>
-        <button class="btn btn-outline" onclick="document.getElementById('inputLatin').value='';document.getElementById('outputKaganga').textContent='—'">Bersihkan</button>
-        <button class="btn btn-outline" onclick="salinKaganga()">📋 Salin</button>
-      </div>
-    </div>
-
-    <div class="kaganga-section">
-      <div class="subsection-title">📖 Panduan Penulisan Latin</div>
-      <p style="font-size:0.82rem;color:var(--abu);margin-bottom:14px;">Gunakan kode berikut saat mengetik agar konverter bekerja dengan benar:</p>
-      <div class="rule-list" id="panduanLatin"></div>
-    </div>
+  <div class="stats-bar">
+    <div class="stat-chip"><span id="statTotal">0</span>Total Kata</div>
+    <div class="stat-chip"><span>5</span>Dialek</div>
+    <div class="stat-chip"><span>3</span>Bahasa</div>
   </div>
 
-  <!-- ===== TAB KUIS ===== -->
-  <div id="tab-kuis" class="tab-panel">
-    <div class="kuis-mode-row">
-      <button class="btn btn-outline aktif-mode" id="mode-huruf" onclick="setMode('huruf')">🔤 Tebak Huruf</button>
-      <button class="btn btn-outline" id="mode-kata" onclick="setMode('kata')">📝 Tebak Kata</button>
-    </div>
+  <div class="results-count" id="resultsCount"></div>
+  <div class="word-grid" id="wordGrid"></div>
+</div>
 
-    <div class="skor-panel">
-      <div class="skor-item">
-        <div class="skor-angka" id="skorBenar">0</div>
-        <div class="skor-label">Benar</div>
-      </div>
-      <div class="skor-item">
-        <div class="skor-angka" id="skorTotal">0</div>
-        <div class="skor-label">Total</div>
-      </div>
-      <div class="skor-item">
-        <div class="skor-angka" id="skorPersen">—</div>
-        <div class="skor-label">Akurasi</div>
-      </div>
-    </div>
-
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:0%"></div>
-    </div>
-
-    <div class="kuis-card">
-      <div class="kuis-pertanyaan" id="kuisPertanyaan">Apa nama huruf Kaganga ini?</div>
-      <div class="kuis-target" id="kuisTarget">ꤰ</div>
-      <div class="kuis-pilihan" id="kuisPilihan"></div>
-      <div class="feedback-msg" id="feedbackMsg"></div>
-    </div>
-
-    <div style="text-align:center;">
-      <button class="btn btn-outline" onclick="resetKuis()">🔄 Mulai Ulang</button>
+<!-- ===== KAGANGA ===== -->
+<div id="tab-kaganga" class="tab-panel">
+  <div class="info-banner">
+    <h3>🏛️ Aksara Kaganga — Warisan Leluhur Rejang</h3>
+    <p>Aksara tradisional masyarakat Rejang, Bengkulu. Termasuk kelompok aksara Abugida — setiap konsonan mengandung bunyi vokal 'a' bawaan. Terdaftar dalam Unicode blok U+A930–U+A95F (2009).</p>
+  </div>
+  <div class="kaganga-section">
+    <div class="subsection-title">🔤 Konsonan (23 huruf)</div>
+    <div class="char-grid" id="gridKonsonan"></div>
+    <div class="subsection-title">🔵 Tanda Vokal (Diakritik)</div>
+    <p style="font-size:.8rem;color:var(--abu);margin-bottom:12px;">Vokal selain 'a' dituliskan sebagai tanda di atas/bawah konsonan. Vokal 'a' adalah vokal bawaan.</p>
+    <div class="char-grid" id="gridVokal"></div>
+    <div class="subsection-title">🔢 Angka Rejang</div>
+    <div class="char-grid" id="gridAngka"></div>
+  </div>
+  <div class="kaganga-section">
+    <div class="subsection-title">📌 Aturan Penulisan</div>
+    <div class="rule-list">
+      <div class="rule-item"><div><div class="rule-latin">Arah</div></div><div class="rule-desc">Ditulis dari kiri ke kanan, seperti tulisan Latin.</div></div>
+      <div class="rule-item"><div><div class="rule-latin">Vokal 'a'</div></div><div class="rule-desc">Sudah terkandung dalam setiap konsonan. "Ka" = <span style="font-family:'Noto Sans Rejang',serif;color:var(--emas)">ꤰ</span></div></div>
+      <div class="rule-item"><div><div class="rule-latin">Vokal lain</div></div><div class="rule-desc">Ditambahkan sebagai diakritik. "Ki" = <span style="font-family:'Noto Sans Rejang',serif;color:var(--emas)">ꤰꥇ</span> (Ka + tanda I)</div></div>
+      <div class="rule-item"><div><div class="rule-latin">Konsonan mati</div></div><div class="rule-desc">Ditandai virama <span style="font-family:'Noto Sans Rejang',serif;color:var(--emas)">ꥍ</span>. "pak" = <span style="font-family:'Noto Sans Rejang',serif;color:var(--emas)">ꤶꤰꥍ</span></div></div>
+      <div class="rule-item"><div><div class="rule-latin">Font</div></div><div class="rule-desc">"Noto Sans Rejang" (Google Fonts) untuk tampilan terbaik.</div></div>
     </div>
   </div>
+</div>
 
-  <!-- ===== TAB TENTANG ===== -->
-  <div id="tab-tentang" class="tab-panel">
-    <div class="kaganga-section">
-      <div class="subsection-title">🌿 Tentang Proyek Ini</div>
-      <p style="font-size:0.88rem;line-height:1.8;color:#444;margin-bottom:14px;">
-        Kamus Bahasa Rejang & Aksara Kaganga adalah proyek <strong>open source</strong> yang bertujuan melestarikan dan memudahkan akses terhadap Bahasa Rejang — salah satu bahasa daerah Bengkulu yang kaya. Proyek ini mencakup lima dialek utama yang digunakan di berbagai wilayah Bengkulu.
-      </p>
-      <div style="background:var(--krem);border-radius:12px;padding:16px;margin-bottom:16px;">
-        <div style="font-weight:600;color:var(--coklat);margin-bottom:8px;">📍 Lima Dialek yang Didokumentasikan:</div>
-        <ul style="font-size:0.85rem;line-height:2;padding-left:20px;color:#444;">
-          <li><strong>Lebong</strong> — Kabupaten Lebong</li>
-          <li><strong>Rejang Lebong</strong> — Kabupaten Rejang Lebong (dialek standar/referensi)</li>
-          <li><strong>Kepahiang</strong> — Kabupaten Kepahiang</li>
-          <li><strong>Bengkulu Utara</strong> — Kabupaten Bengkulu Utara</li>
-          <li><strong>Bengkulu Tengah</strong> — Kabupaten Bengkulu Tengah</li>
-        </ul>
+<!-- ===== KONVERTER ===== -->
+<div id="tab-konverter" class="tab-panel">
+  <div class="info-banner">
+    <h3>🔄 Konverter Latin → Kaganga</h3>
+    <p>Ketik teks Rejang dalam ejaan Latin, lihat konversinya ke aksara Kaganga secara otomatis. Gunakan panduan di bawah untuk ejaan yang benar.</p>
+  </div>
+  <div class="converter-box">
+    <div class="converter-cols">
+      <div>
+        <div class="converter-label">Teks Latin (Ejaan Rejang)</div>
+        <textarea class="converter-textarea" id="inputLatin"
+          placeholder="Cth: wai, uku lop umeak, ngen ngen..." oninput="konversiTeks()"></textarea>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="converter-label">Aksara Kaganga</div>
+        <div class="converter-output" id="outputKaganga">—</div>
       </div>
     </div>
-
-    <div class="kaganga-section">
-      <div class="subsection-title">🤝 Cara Berkontribusi</div>
-      <p style="font-size:0.85rem;line-height:1.8;color:#444;margin-bottom:12px;">
-        Proyek ini terbuka untuk semua orang! Kamu bisa berkontribusi dengan cara:
-      </p>
-      <ul style="font-size:0.85rem;line-height:2;padding-left:20px;color:#444;margin-bottom:16px;">
-        <li>Menambah atau mengoreksi kosakata di <code>data/kosakata.json</code></li>
-        <li>Memperbaiki data huruf Kaganga di <code>data/kaganga.json</code></li>
-        <li>Melaporkan kesalahan melalui GitHub Issues</li>
-        <li>Menerjemahkan antarmuka ke bahasa lain</li>
-        <li>Menambahkan rekaman suara pengucapan kata</li>
-      </ul>
-      <a href="https://github.com" class="btn btn-primary" style="display:inline-flex;text-decoration:none;">
-        ⭐ Lihat di GitHub
-      </a>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="konversiContoh('wai duei telo')">Contoh: Angka</button>
+      <button class="btn btn-primary" onclick="konversiContoh('uku lop umeak')">Contoh: Kalimat</button>
+      <button class="btn btn-primary" onclick="konversiContoh('mo te namo uku rejang')">Contoh: Salam</button>
+      <button class="btn btn-outline" onclick="bersihkan()">🗑️ Bersih</button>
+      <button class="btn btn-outline" onclick="salinKaganga()">📋 Salin</button>
     </div>
+  </div>
+  <div class="kaganga-section">
+    <div class="subsection-title">📖 Panduan Ejaan Latin</div>
+    <div class="rule-list" id="panduanLatin"></div>
+  </div>
+</div>
 
-    <div class="kaganga-section">
-      <div class="subsection-title">📚 Referensi & Lisensi</div>
-      <ul style="font-size:0.82rem;line-height:2;padding-left:20px;color:#444;">
-        <li>Jaspan, M.A. (1964). <em>A Rejang-English dictionary</em>. ANU Press.</li>
-        <li>The Unicode Standard – Rejang Block (U+A930–U+A95F)</li>
-        <li>Walker, D. (1976). <em>A grammar of the Rejang language</em>.</li>
-        <li>Data kosakata dilisensikan di bawah <strong>CC-BY-SA 4.0</strong></li>
-        <li>Kode aplikasi dilisensikan di bawah <strong>MIT License</strong></li>
+<!-- ===== KUIS ===== -->
+<div id="tab-kuis" class="tab-panel">
+  <div class="kuis-mode-row">
+    <button class="btn btn-outline" id="mode-huruf" onclick="setMode('huruf')">🔤 Tebak Huruf</button>
+    <button class="btn btn-outline" id="mode-kata-id" onclick="setMode('kata-id')">🇮🇩 Tebak Kata (ID)</button>
+    <button class="btn btn-outline" id="mode-kata-en" onclick="setMode('kata-en')">🇬🇧 Tebak Kata (EN)</button>
+  </div>
+  <div class="skor-panel">
+    <div class="skor-item"><div class="skor-angka" id="skorBenar">0</div><div class="skor-label">Benar</div></div>
+    <div class="skor-item"><div class="skor-angka" id="skorTotal">0</div><div class="skor-label">Total</div></div>
+    <div class="skor-item"><div class="skor-angka" id="skorPersen">—</div><div class="skor-label">Akurasi</div></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="kuis-card">
+    <div class="kuis-pertanyaan" id="kuisPertanyaan">Apa bunyi huruf ini?</div>
+    <div class="kuis-target" id="kuisTarget">ꤰ</div>
+    <div class="kuis-pilihan" id="kuisPilihan"></div>
+    <div class="feedback-msg" id="feedbackMsg"></div>
+  </div>
+  <div style="text-align:center"><button class="btn btn-outline" onclick="resetKuis()">🔄 Mulai Ulang</button></div>
+</div>
+
+<!-- ===== TENTANG ===== -->
+<div id="tab-tentang" class="tab-panel">
+  <div class="kaganga-section">
+    <div class="subsection-title">🌿 Tentang Proyek</div>
+    <p style="font-size:.86rem;line-height:1.8;color:#444;margin-bottom:14px;">Kamus Bahasa Rejang & Aksara Kaganga adalah proyek <strong>open source</strong> untuk melestarikan Bahasa Rejang — bahasa daerah Bengkulu yang kaya. Tersedia dalam <strong>250+ kata</strong>, <strong>5 dialek</strong>, dan <strong>3 bahasa</strong> (Indonesia, Inggris, Rejang).</p>
+    <div style="background:var(--krem);border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-weight:600;color:var(--coklat);margin-bottom:8px;">📍 Lima Dialek:</div>
+      <ul style="font-size:.83rem;line-height:2;padding-left:18px;color:#444;">
+        <li><strong>Lebong</strong> — Kabupaten Lebong</li>
+        <li><strong>Rejang Lebong</strong> — Kabupaten Rejang Lebong (dialek referensi)</li>
+        <li><strong>Kepahiang</strong> — Kabupaten Kepahiang</li>
+        <li><strong>Bengkulu Utara</strong> — Kabupaten Bengkulu Utara</li>
+        <li><strong>Bengkulu Tengah</strong> — Kabupaten Bengkulu Tengah</li>
       </ul>
     </div>
-
-    <div class="kaganga-section">
-      <div class="subsection-title">🛠️ Struktur File</div>
-      <pre style="background:var(--coklat-tua);color:var(--emas-muda);padding:16px;border-radius:10px;font-size:0.78rem;line-height:1.8;overflow-x:auto;">
+  </div>
+  <div class="kaganga-section">
+    <div class="subsection-title">🤝 Berkontribusi</div>
+    <ul style="font-size:.83rem;line-height:2;padding-left:18px;color:#444;margin-bottom:14px;">
+      <li>Tambah/koreksi kosakata di <code>data/kosakata.json</code></li>
+      <li>Perbaiki data Kaganga di <code>data/kaganga.json</code></li>
+      <li>Laporkan kesalahan via GitHub Issues</li>
+      <li>Tambahkan rekaman audio pengucapan</li>
+      <li>Terjemahkan ke bahasa daerah lain</li>
+    </ul>
+    <a href="https://github.com" class="btn btn-primary" style="display:inline-flex;text-decoration:none">⭐ Lihat di GitHub</a>
+  </div>
+  <div class="kaganga-section">
+    <div class="subsection-title">📚 Referensi</div>
+    <ul style="font-size:.8rem;line-height:2;padding-left:18px;color:#444;">
+      <li>Jaspan, M.A. (1964). <em>A Rejang-English dictionary</em>. ANU Press.</li>
+      <li>Walker, D.F. (1976). <em>A grammar of the Rejang language</em>. Pacific Linguistics.</li>
+      <li>The Unicode Consortium. <em>Rejang Block U+A930–U+A95F</em>.</li>
+      <li>Wiktionary ID: <em>Lampiran: Kamus bahasa Indonesia – bahasa Rejang</em>.</li>
+      <li>Kosakata: CC-BY-SA 4.0 | Kode: MIT License</li>
+    </ul>
+  </div>
+  <div class="kaganga-section">
+    <div class="subsection-title">🛠️ Struktur File</div>
+    <pre style="background:var(--coklat-tua);color:var(--emas-muda);padding:14px;border-radius:10px;font-size:.76rem;line-height:1.8;overflow-x:auto;">
 bahasa-rejang/
-├── index.html          ← Aplikasi utama (file ini)
+├── index.html          ← Aplikasi utama
 ├── data/
-│   ├── kosakata.json   ← Database kosakata
+│   ├── kosakata.json   ← 250+ kata, 5 dialek, 3 bahasa
 │   └── kaganga.json    ← Data huruf Kaganga
-├── README.md           ← Dokumentasi
-└── LICENSE             ← Lisensi MIT</pre>
-    </div>
+├── README.md
+└── LICENSE</pre>
   </div>
+</div>
 
 </main>
 
 <footer>
   <p>Kamus Bahasa Rejang & Aksara Kaganga · Open Source · <a href="https://github.com">GitHub</a></p>
-  <p style="margin-top:4px;">Dibuat dengan ❤️ untuk melestarikan warisan budaya Bengkulu</p>
-  <p style="margin-top:4px;font-family:'Noto Sans Rejang',serif;font-size:1.1rem;color:var(--emas);letter-spacing:4px;">ꤰꤱꤲ · ꤳꤴꤵ · ꤶꤷꤸ</p>
+  <p style="margin-top:3px">Dibuat dengan ❤️ untuk melestarikan warisan budaya Bengkulu</p>
+  <p style="margin-top:3px;font-family:'Noto Sans Rejang',serif;font-size:1.1rem;color:var(--emas);letter-spacing:4px">ꤰꤱꤲ · ꤳꤴꤵ · ꤶꤷꤸ</p>
 </footer>
 
 <script>
 // ============================================================
-//  DATA
+// KONVERTER KAGANGA
 // ============================================================
-const KOSAKATA = [
-  { id:"001", indonesia:"air", kategori:"alam", dialek:{ lebong:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"}, rejang_lebong:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"}, kepahiang:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"}, bengkulu_utara:{kata:"waei",ipa:"waei",kaganga:"ꥀꤰꥊ"}, bengkulu_tengah:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"} }},
-  { id:"002", indonesia:"api", kategori:"alam", dialek:{ lebong:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, rejang_lebong:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, kepahiang:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, bengkulu_utara:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, bengkulu_tengah:{kata:"apoi",ipa:"apoi",kaganga:"ꤰꤶꥋꥇ"} }},
-  { id:"003", indonesia:"batu", kategori:"alam", dialek:{ lebong:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"}, rejang_lebong:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"}, kepahiang:{kata:"beteun",ipa:"bəteun",kaganga:"ꤷꤳꤳꥈꤵ"}, bengkulu_utara:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"}, bengkulu_tengah:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"} }},
-  { id:"004", indonesia:"rumah", kategori:"bangunan", dialek:{ lebong:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, rejang_lebong:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, kepahiang:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, bengkulu_utara:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, bengkulu_tengah:{kata:"umea",ipa:"umea",kaganga:"ꤰꥈꤸꥊ"} }},
-  { id:"005", indonesia:"ibu", kategori:"keluarga", dialek:{ lebong:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, rejang_lebong:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, kepahiang:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, bengkulu_utara:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, bengkulu_tengah:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"} }},
-  { id:"006", indonesia:"ayah / bapak", kategori:"keluarga", dialek:{ lebong:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"}, rejang_lebong:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"}, kepahiang:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"}, bengkulu_utara:{kata:"bapak",ipa:"bapaʔ",kaganga:"ꤷꤰꤶꤰ"}, bengkulu_tengah:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"} }},
-  { id:"007", indonesia:"anak", kategori:"keluarga", dialek:{ lebong:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, rejang_lebong:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, kepahiang:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, bengkulu_utara:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, bengkulu_tengah:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"} }},
-  { id:"008", indonesia:"makan", kategori:"kegiatan", dialek:{ lebong:{kata:"ngen",ipa:"ŋen",kaganga:"ꤲꤵ"}, rejang_lebong:{kata:"ngen",ipa:"ŋen",kaganga:"ꤲꤵ"}, kepahiang:{kata:"ngon",ipa:"ŋon",kaganga:"ꤲꤵ"}, bengkulu_utara:{kata:"ngen",ipa:"ŋen",kaganga:"ꤲꤵ"}, bengkulu_tengah:{kata:"man",ipa:"man",kaganga:"ꤸꤵ"} }},
-  { id:"009", indonesia:"minum", kategori:"kegiatan", dialek:{ lebong:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"}, rejang_lebong:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"}, kepahiang:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"}, bengkulu_utara:{kata:"minem",ipa:"minəm",kaganga:"ꤸꥇꤵꤸ"}, bengkulu_tengah:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"} }},
-  { id:"010", indonesia:"pergi", kategori:"kegiatan", dialek:{ lebong:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"}, rejang_lebong:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"}, kepahiang:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"}, bengkulu_utara:{kata:"luop",ipa:"luop",kaganga:"ꤾꥈꥋꤶ"}, bengkulu_tengah:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"} }},
-  { id:"011", indonesia:"tidur", kategori:"kegiatan", dialek:{ lebong:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, rejang_lebong:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, kepahiang:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, bengkulu_utara:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, bengkulu_tengah:{kata:"medem",ipa:"medəm",kaganga:"ꤸꤴꤸ"} }},
-  { id:"012", indonesia:"satu", kategori:"angka", dialek:{ lebong:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"}, rejang_lebong:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"}, kepahiang:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"}, bengkulu_utara:{kata:"saei",ipa:"saei",kaganga:"ꤼꥊ"}, bengkulu_tengah:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"} }},
-  { id:"013", indonesia:"dua", kategori:"angka", dialek:{ lebong:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, rejang_lebong:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, kepahiang:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, bengkulu_utara:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, bengkulu_tengah:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"} }},
-  { id:"014", indonesia:"tiga", kategori:"angka", dialek:{ lebong:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, rejang_lebong:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, kepahiang:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, bengkulu_utara:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, bengkulu_tengah:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"} }},
-  { id:"015", indonesia:"empat", kategori:"angka", dialek:{ lebong:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, rejang_lebong:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, kepahiang:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, bengkulu_utara:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, bengkulu_tengah:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"} }},
-  { id:"016", indonesia:"lima", kategori:"angka", dialek:{ lebong:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, rejang_lebong:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, kepahiang:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, bengkulu_utara:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, bengkulu_tengah:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"} }},
-  { id:"017", indonesia:"enam", kategori:"angka", dialek:{ lebong:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, rejang_lebong:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, kepahiang:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, bengkulu_utara:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, bengkulu_tengah:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"} }},
-  { id:"018", indonesia:"tujuh", kategori:"angka", dialek:{ lebong:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"}, rejang_lebong:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"}, kepahiang:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"}, bengkulu_utara:{kata:"tujuh",ipa:"tujuh",kaganga:"ꤳꥈꤺꥈ꤁"}, bengkulu_tengah:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"} }},
-  { id:"019", indonesia:"delapan", kategori:"angka", dialek:{ lebong:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, rejang_lebong:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, kepahiang:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, bengkulu_utara:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, bengkulu_tengah:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"} }},
-  { id:"020", indonesia:"sembilan", kategori:"angka", dialek:{ lebong:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, rejang_lebong:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, kepahiang:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, bengkulu_utara:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, bengkulu_tengah:{kata:"sebo",ipa:"səbo",kaganga:"ꤼꤷꥋ"} }},
-  { id:"021", indonesia:"sepuluh", kategori:"angka", dialek:{ lebong:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"}, rejang_lebong:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"}, kepahiang:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"}, bengkulu_utara:{kata:"sepuluh",ipa:"səpuluh",kaganga:"ꤼꤶꥈꤾꥈ꤁"}, bengkulu_tengah:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"} }},
-  { id:"022", indonesia:"saya / aku", kategori:"kata_ganti", dialek:{ lebong:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, rejang_lebong:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, kepahiang:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, bengkulu_utara:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, bengkulu_tengah:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"} }},
-  { id:"023", indonesia:"kamu / kau", kategori:"kata_ganti", dialek:{ lebong:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, rejang_lebong:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, kepahiang:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, bengkulu_utara:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, bengkulu_tengah:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"} }},
-  { id:"024", indonesia:"dia", kategori:"kata_ganti", dialek:{ lebong:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"}, rejang_lebong:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"}, kepahiang:{kata:"bie",ipa:"bie",kaganga:"ꤷꥇꤰ"}, bengkulu_utara:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"}, bengkulu_tengah:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"} }},
-  { id:"025", indonesia:"besar", kategori:"sifat", dialek:{ lebong:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"}, rejang_lebong:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"}, kepahiang:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"}, bengkulu_utara:{kata:"gede",ipa:"gede",kaganga:"ꤱꤴ"}, bengkulu_tengah:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"} }},
-  { id:"026", indonesia:"kecil", kategori:"sifat", dialek:{ lebong:{kata:"keci'",ipa:"kəciʔ",kaganga:"ꤰꤹꥇꤰ"}, rejang_lebong:{kata:"keci'",ipa:"kəciʔ",kaganga:"ꤰꤹꥇꤰ"}, kepahiang:{kata:"kecik",ipa:"kəcik",kaganga:"ꤰꤹꥇꤰ"}, bengkulu_utara:{kata:"keci'",ipa:"kəciʔ",kaganga:"ꤰꤹꥇꤰ"}, bengkulu_tengah:{kata:"kecik",ipa:"kəcik",kaganga:"ꤰꤹꥇꤰ"} }},
-  { id:"027", indonesia:"panas", kategori:"sifat", dialek:{ lebong:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, rejang_lebong:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, kepahiang:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, bengkulu_utara:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, bengkulu_tengah:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"} }},
-  { id:"028", indonesia:"dingin", kategori:"sifat", dialek:{ lebong:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"}, rejang_lebong:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"}, kepahiang:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"}, bengkulu_utara:{kata:"besio",ipa:"bəsio",kaganga:"ꤷꤼꥇꥋ"}, bengkulu_tengah:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"} }},
-  { id:"029", indonesia:"matahari", kategori:"alam", dialek:{ lebong:{kata:"mato lem",ipa:"mato lem",kaganga:"ꤸꤳꥋ ꤾꤸ"}, rejang_lebong:{kata:"mato lem",ipa:"mato lem",kaganga:"ꤸꤳꥋ ꤾꤸ"}, kepahiang:{kata:"mato arei",ipa:"mato arei",kaganga:"ꤸꤳꥋ ꤰꤽꥊ"}, bengkulu_utara:{kata:"mato arei",ipa:"mato arei",kaganga:"ꤸꤳꥋ ꤰꤽꥊ"}, bengkulu_tengah:{kata:"mato lem",ipa:"mato lem",kaganga:"ꤸꤳꥋ ꤾꤸ"} }},
-  { id:"030", indonesia:"bulan", kategori:"alam", dialek:{ lebong:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, rejang_lebong:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, kepahiang:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, bengkulu_utara:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, bengkulu_tengah:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"} }},
-  { id:"031", indonesia:"bintang", kategori:"alam", dialek:{ lebong:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, rejang_lebong:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, kepahiang:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, bengkulu_utara:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, bengkulu_tengah:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"} }},
-  { id:"032", indonesia:"hutan", kategori:"alam", dialek:{ lebong:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, rejang_lebong:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, kepahiang:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, bengkulu_utara:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, bengkulu_tengah:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"} }},
-  { id:"033", indonesia:"sawah", kategori:"alam", dialek:{ lebong:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, rejang_lebong:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, kepahiang:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, bengkulu_utara:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, bengkulu_tengah:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"} }},
-  { id:"034", indonesia:"bagus / indah", kategori:"sifat", dialek:{ lebong:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, rejang_lebong:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, kepahiang:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, bengkulu_utara:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, bengkulu_tengah:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"} }},
-  { id:"035", indonesia:"terima kasih", kategori:"ungkapan", dialek:{ lebong:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"}, rejang_lebong:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"}, kepahiang:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"}, bengkulu_utara:{kata:"mak asih",ipa:"mak asih",kaganga:"ꤸꤰ ꤰꤼꥇ꤁"}, bengkulu_tengah:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"} }},
-  { id:"036", indonesia:"selamat pagi", kategori:"ungkapan", dialek:{ lebong:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, rejang_lebong:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, kepahiang:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, bengkulu_utara:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, bengkulu_tengah:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"} }},
-  { id:"037", indonesia:"tangan", kategori:"tubuh", dialek:{ lebong:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, rejang_lebong:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, kepahiang:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, bengkulu_utara:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, bengkulu_tengah:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"} }},
-  { id:"038", indonesia:"kaki", kategori:"tubuh", dialek:{ lebong:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, rejang_lebong:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, kepahiang:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, bengkulu_utara:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, bengkulu_tengah:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"} }},
-  { id:"039", indonesia:"mata", kategori:"tubuh", dialek:{ lebong:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, rejang_lebong:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, kepahiang:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, bengkulu_utara:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, bengkulu_tengah:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"} }},
-  { id:"040", indonesia:"kepala", kategori:"tubuh", dialek:{ lebong:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, rejang_lebong:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, kepahiang:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, bengkulu_utara:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, bengkulu_tengah:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"} }}
-];
-
-const KAGANGA_KONSONAN = [
-  { huruf:"ꤰ", unicode:"U+A930", latin:"ka", ipa:"k", nama:"Ka", contoh:"ꤰꥇꤳ (kite = kamu)" },
-  { huruf:"ꤱ", unicode:"U+A931", latin:"ga", ipa:"g", nama:"Ga", contoh:"ꤱꤴꤲ (gedang = besar)" },
-  { huruf:"ꤲ", unicode:"U+A932", latin:"nga", ipa:"ŋ", nama:"Nga", contoh:"ꤲꤵ (ngen = makan)" },
-  { huruf:"ꤳ", unicode:"U+A933", latin:"ta", ipa:"t", nama:"Ta", contoh:"ꤳꤾꥋ (telo = tiga)" },
-  { huruf:"ꤴ", unicode:"U+A934", latin:"da", ipa:"d", nama:"Da", contoh:"ꤴꥈꥊ (duei = dua)" },
-  { huruf:"ꤵ", unicode:"U+A935", latin:"na", ipa:"n", nama:"Na", contoh:"ꤵꥋ (no = itu)" },
-  { huruf:"ꤶ", unicode:"U+A936", latin:"pa", ipa:"p", nama:"Pa", contoh:"ꤶꤱꥇ (pagi = pagi)" },
-  { huruf:"ꤷ", unicode:"U+A937", latin:"ba", ipa:"b", nama:"Ba", contoh:"ꤷꥈꤾꤵ (bulan = bulan)" },
-  { huruf:"ꤸ", unicode:"U+A938", latin:"ma", ipa:"m", nama:"Ma", contoh:"ꤸꤳꥋ (mato = mata)" },
-  { huruf:"ꤹ", unicode:"U+A939", latin:"ca", ipa:"tʃ", nama:"Ca", contoh:"ꤰꤹꥇꤰ (keci = kecil)" },
-  { huruf:"ꤺ", unicode:"U+A93A", latin:"ja", ipa:"dʒ", nama:"Ja", contoh:"ꤺꥇꤾꥋ (jilo = jauh)" },
-  { huruf:"ꤻ", unicode:"U+A93B", latin:"nya", ipa:"ɲ", nama:"Nya", contoh:"ꤻꤰꤳ (nyakat = naik)" },
-  { huruf:"ꤼ", unicode:"U+A93C", latin:"sa", ipa:"s", nama:"Sa", contoh:"ꤼꤰꥊ (sa'ei = satu)" },
-  { huruf:"ꤽ", unicode:"U+A93D", latin:"ra", ipa:"r", nama:"Ra", contoh:"ꤽꥈꤸꤰ (rumak = rumput)" },
-  { huruf:"ꤾ", unicode:"U+A93E", latin:"la", ipa:"l", nama:"La", contoh:"ꤾꥇꤸꥋ (limo = lima)" },
-  { huruf:"ꤿ", unicode:"U+A93F", latin:"ya", ipa:"j", nama:"Ya", contoh:"ꤿꥊ (yai = nenek)" },
-  { huruf:"ꥀ", unicode:"U+A940", latin:"wa", ipa:"w", nama:"Wa", contoh:"ꥀꤰꥇ (wai = air)" },
-  { huruf:"ꥁ", unicode:"U+A941", latin:"ha", ipa:"h", nama:"Ha", contoh:"ꥁꤰꥇ (hai = halo)" },
-  { huruf:"ꥂ", unicode:"U+A942", latin:"mba", ipa:"mb", nama:"Mba", contoh:"ꥂꤰꤽ (mbar = hambur)" },
-  { huruf:"ꥃ", unicode:"U+A943", latin:"ngga", ipa:"ŋɡ", nama:"Ngga", contoh:"ꥃꤰꥇ (nggai = tidak)" },
-  { huruf:"ꥄ", unicode:"U+A944", latin:"nda", ipa:"nd", nama:"Nda", contoh:"ꥄꤰꤾ (ndal = jatuh)" },
-  { huruf:"ꥅ", unicode:"U+A945", latin:"ndra", ipa:"ndr", nama:"Ndra", contoh:"ꥅꥋꤸ (ndrom = tenggelam)" },
-  { huruf:"ꥆ", unicode:"U+A946", latin:"ngka", ipa:"ŋk", nama:"Ngka", contoh:"ꥆꥇ (ngkai = kakak)" }
-];
-
-const KAGANGA_VOKAL = [
-  { huruf:"ꥇ", unicode:"U+A947", latin:"i", ipa:"i", nama:"Vokal I", contoh:"ꤰꥇ = ki" },
-  { huruf:"ꥈ", unicode:"U+A948", latin:"u", ipa:"u", nama:"Vokal U", contoh:"ꤰꥈ = ku" },
-  { huruf:"ꥉ", unicode:"U+A949", latin:"e", ipa:"e", nama:"Vokal E", contoh:"ꤰꥉ = ke" },
-  { huruf:"ꥊ", unicode:"U+A94A", latin:"ai", ipa:"ai", nama:"Vokal AI", contoh:"ꤰꥊ = kai" },
-  { huruf:"ꥋ", unicode:"U+A94B", latin:"o", ipa:"o", nama:"Vokal O", contoh:"ꤰꥋ = ko" },
-  { huruf:"ꥌ", unicode:"U+A94C", latin:"au", ipa:"au", nama:"Vokal AU", contoh:"ꤰꥌ = kau" },
-  { huruf:"ꥍ", unicode:"U+A94D", latin:"(mati)", ipa:"◌̈", nama:"Virama", contoh:"ꤰꥍ = k (mati)" },
-  { huruf:"ꥎ", unicode:"U+A94E", latin:"ea", ipa:"əa", nama:"Vokal EA", contoh:"ꤰꥎ = kea" }
-];
-
-const KAGANGA_ANGKA = [
-  { huruf:"꤀", unicode:"U+A900", latin:"0", nama:"Nol" },
-  { huruf:"꤁", unicode:"U+A901", latin:"1", nama:"Satu" },
-  { huruf:"꤂", unicode:"U+A902", latin:"2", nama:"Dua" },
-  { huruf:"꤃", unicode:"U+A903", latin:"3", nama:"Tiga" },
-  { huruf:"꤄", unicode:"U+A904", latin:"4", nama:"Empat" },
-  { huruf:"꤅", unicode:"U+A905", latin:"5", nama:"Lima" },
-  { huruf:"꤆", unicode:"U+A906", latin:"6", nama:"Enam" },
-  { huruf:"꤇", unicode:"U+A907", latin:"7", nama:"Tujuh" },
-  { huruf:"꤈", unicode:"U+A908", latin:"8", nama:"Delapan" },
-  { huruf:"꤉", unicode:"U+A909", latin:"9", nama:"Sembilan" }
-];
-
-// ============================================================
-//  STATE
-// ============================================================
-let kategoriAktif = 'semua';
-let kuisMode = 'huruf';
-let skorBenar = 0, skorTotal = 0;
-let kuisSoalSaatIni = null;
-let kuisSelesai = false;
-const DIALEK_NAMA = {
-  lebong: 'Lebong',
-  rejang_lebong: 'Rejang Lebong',
-  kepahiang: 'Kepahiang',
-  bengkulu_utara: 'Bengkulu Utara',
-  bengkulu_tengah: 'Bengkulu Tengah'
-};
-
-// ============================================================
-//  NAVIGASI TAB
-// ============================================================
-function gantiTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('aktif'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('aktif'));
-  document.getElementById('tab-' + id).classList.add('aktif');
-  btn.classList.add('aktif');
-  if (id === 'kuis') initKuis();
-  if (id === 'kaganga') renderKaganga();
-  if (id === 'konverter') renderPanduan();
+const KONS = {'ngg':'ꥃ','mb':'ꥂ','nd':'ꥄ','ny':'ꤻ','ng':'ꤲ','k':'ꤰ','g':'ꤱ','t':'ꤳ','d':'ꤴ','n':'ꤵ','p':'ꤶ','b':'ꤷ','m':'ꤸ','c':'ꤹ','j':'ꤺ','s':'ꤼ','r':'ꤽ','l':'ꤾ','y':'ꤿ','w':'ꥀ','h':'ꥁ'};
+const VOK = {'ai':'ꥊ','au':'ꥌ','ea':'ꥎ','i':'ꥇ','u':'ꥈ','e':'ꥉ','o':'ꥋ','a':''};
+const KKEYS = Object.keys(KONS).sort((a,b)=>b.length-a.length);
+const VKEYS = ['ai','au','ea','i','u','e','o','a'];
+const CR = 'ꤰ';
+function toKaganga(text){
+  if(!text.trim())return'';
+  let r='',i=0,t=text.toLowerCase();
+  while(i<t.length){
+    const ch=t[i];
+    if(ch===' '||ch==='\n'||ch==='\r'){r+=ch;i++;continue;}
+    if(ch==="'"||ch==='`'){r+=CR;i++;continue;}
+    let k=null,kl=0;
+    for(const key of KKEYS){if(t.slice(i).startsWith(key)){k=KONS[key];kl=key.length;break;}}
+    if(k){
+      r+=k;i+=kl;
+      let vf=false;
+      for(const vk of VKEYS){if(t.slice(i).startsWith(vk)){r+=VOK[vk];i+=vk.length;vf=true;break;}}
+      if(!vf)r+='ꥍ';
+    } else {
+      let vf=false;
+      for(const vk of VKEYS){if(t.slice(i).startsWith(vk)){r+=CR+VOK[vk];i+=vk.length;vf=true;break;}}
+      if(!vf){r+=ch;i++;}
+    }
+  }
+  return r;
 }
 
 // ============================================================
-//  KAMUS
+// DATA KOSAKATA — 250+ kata, 5 dialek, terjemahan Inggris
+// Format: rejang=bentuk utama, dialek={override jika berbeda}
 // ============================================================
-function cariKata() {
+const ALL_DIALEK = ['lebong','rejang_lebong','kepahiang','bengkulu_utara','bengkulu_tengah'];
+const DNAME = {lebong:'Lebong',rejang_lebong:'Rejang Lebong',kepahiang:'Kepahiang',bengkulu_utara:'Bengkulu Utara',bengkulu_tengah:'Bengkulu Tengah'};
+
+function resolve(item,d){
+  const ov = item.dialek&&item.dialek[d];
+  const kata = ov?.kata ?? item.rejang;
+  const ipa  = ov?.ipa  ?? item.ipa;
+  return { kata, ipa, kaganga: toKaganga(kata) };
+}
+
+const RAW = [
+// ── ALAM ──────────────────────────────────────────────────
+{id:'A01',indonesia:'abu',english:'ash',kategori:'alam',rejang:'abu',ipa:'abu'},
+{id:'A02',indonesia:'air',english:'water',kategori:'alam',rejang:'wai',ipa:'wai',dialek:{bengkulu_utara:{kata:'waei',ipa:'waei'}}},
+{id:'A03',indonesia:'akar',english:'root',kategori:'alam',rejang:'akar',ipa:'akar'},
+{id:'A04',indonesia:'angin',english:'wind',kategori:'alam',rejang:'angin',ipa:'aŋin'},
+{id:'A05',indonesia:'awan',english:'cloud',kategori:'alam',rejang:'awan',ipa:'awan'},
+{id:'A06',indonesia:'api',english:'fire',kategori:'alam',rejang:'apui',ipa:'apui',dialek:{bengkulu_tengah:{kata:'apoi',ipa:'apoi'}}},
+{id:'A07',indonesia:'batu',english:'stone / rock',kategori:'alam',rejang:'beto',ipa:'bəto',dialek:{kepahiang:{kata:'beteun',ipa:'bəteun'}}},
+{id:'A08',indonesia:'biji',english:'seed',kategori:'alam',rejang:'biji',ipa:'bidʒi'},
+{id:'A09',indonesia:'bintang',english:'star',kategori:'alam',rejang:'bintang',ipa:'bintaŋ'},
+{id:'A10',indonesia:'buah',english:'fruit',kategori:'alam',rejang:'buah',ipa:'buah'},
+{id:'A11',indonesia:'bulan',english:'moon / month',kategori:'alam',rejang:'bulan',ipa:'bulan'},
+{id:'A12',indonesia:'bunga',english:'flower',kategori:'alam',rejang:'kembang',ipa:'kəmbaŋ',dialek:{bengkulu_utara:{kata:'bungo',ipa:'buŋo'}}},
+{id:'A13',indonesia:'bumi',english:'earth / ground',kategori:'alam',rejang:'bumi',ipa:'bumi'},
+{id:'A14',indonesia:'daun',english:'leaf',kategori:'alam',rejang:'daun',ipa:'daun'},
+{id:'A15',indonesia:'gunung',english:'mountain',kategori:'alam',rejang:'gunung',ipa:'gunuŋ'},
+{id:'A16',indonesia:'hujan',english:'rain',kategori:'alam',rejang:'udan',ipa:'udan'},
+{id:'A17',indonesia:'hutan',english:'forest',kategori:'alam',rejang:'utan',ipa:'utan'},
+{id:'A18',indonesia:'kabut',english:'fog / mist',kategori:'alam',rejang:'kabut',ipa:'kabut'},
+{id:'A19',indonesia:'kayu',english:'wood / timber',kategori:'alam',rejang:'kayu',ipa:'kayu'},
+{id:'A20',indonesia:'kebun',english:'garden / plantation',kategori:'alam',rejang:'kebun',ipa:'kəbun'},
+{id:'A21',indonesia:'ladang',english:'dry field',kategori:'alam',rejang:'timai',ipa:'timai'},
+{id:'A22',indonesia:'langit',english:'sky',kategori:'alam',rejang:'langit',ipa:'laŋit'},
+{id:'A23',indonesia:'laut',english:'sea / ocean',kategori:'alam',rejang:'laut',ipa:'laut'},
+{id:'A24',indonesia:'lumpur',english:'mud',kategori:'alam',rejang:'lumpur',ipa:'lumpur'},
+{id:'A25',indonesia:'matahari',english:'sun',kategori:'alam',rejang:'mato lem',ipa:'mato lem',dialek:{kepahiang:{kata:'mato arei',ipa:'mato arei'},bengkulu_utara:{kata:'mato arei',ipa:'mato arei'}}},
+{id:'A26',indonesia:'pasir',english:'sand',kategori:'alam',rejang:'pasir',ipa:'pasir'},
+{id:'A27',indonesia:'pelangi',english:'rainbow',kategori:'alam',rejang:'pelangi',ipa:'pelaŋi'},
+{id:'A28',indonesia:'petir',english:'thunder / lightning',kategori:'alam',rejang:'guruh',ipa:'guruh'},
+{id:'A29',indonesia:'pohon',english:'tree',kategori:'alam',rejang:'batang kayu',ipa:'bataŋ kayu'},
+{id:'A30',indonesia:'sawah',english:'rice paddy',kategori:'alam',rejang:'umo',ipa:'umo'},
+{id:'A31',indonesia:'sungai',english:'river',kategori:'alam',rejang:'luwei',ipa:'luwei',dialek:{bengkulu_utara:{kata:'sungai',ipa:'suŋai'}}},
+{id:'A32',indonesia:'tanah',english:'soil / land',kategori:'alam',rejang:'taneak',ipa:'taneaʔ'},
+{id:'A33',indonesia:'udara',english:'air / atmosphere',kategori:'alam',rejang:'udaro',ipa:'udaro'},
+
+// ── HEWAN ─────────────────────────────────────────────────
+{id:'H01',indonesia:'anjing',english:'dog',kategori:'hewan',rejang:'asu',ipa:'asu'},
+{id:'H02',indonesia:'ayam',english:'chicken',kategori:'hewan',rejang:'manuk',ipa:'manuʔ'},
+{id:'H03',indonesia:'babi',english:'pig',kategori:'hewan',rejang:'babi',ipa:'babi'},
+{id:'H04',indonesia:'burung',english:'bird',kategori:'hewan',rejang:'manuk',ipa:'manuʔ'},
+{id:'H05',indonesia:'cacing',english:'earthworm',kategori:'hewan',rejang:'cacing',ipa:'tʃatʃiŋ'},
+{id:'H06',indonesia:'gajah',english:'elephant',kategori:'hewan',rejang:'gajah',ipa:'gadʒah'},
+{id:'H07',indonesia:'harimau',english:'tiger',kategori:'hewan',rejang:'rimau',ipa:'rimau'},
+{id:'H08',indonesia:'ikan',english:'fish',kategori:'hewan',rejang:'ikan',ipa:'ikan'},
+{id:'H09',indonesia:'kambing',english:'goat',kategori:'hewan',rejang:'kambing',ipa:'kambiŋ'},
+{id:'H10',indonesia:'kerbau',english:'buffalo',kategori:'hewan',rejang:'kerbau',ipa:'kərbau'},
+{id:'H11',indonesia:'kera / monyet',english:'monkey',kategori:'hewan',rejang:'beruk',ipa:'bəruʔ'},
+{id:'H12',indonesia:'kucing',english:'cat',kategori:'hewan',rejang:'kucing',ipa:'kutʃiŋ'},
+{id:'H13',indonesia:'kupu-kupu',english:'butterfly',kategori:'hewan',rejang:'kupu-kupu',ipa:'kupu-kupu'},
+{id:'H14',indonesia:'lebah',english:'bee',kategori:'hewan',rejang:'lebah',ipa:'ləbah'},
+{id:'H15',indonesia:'nyamuk',english:'mosquito',kategori:'hewan',rejang:'nyamuk',ipa:'ɲamuʔ'},
+{id:'H16',indonesia:'rusa',english:'deer',kategori:'hewan',rejang:'rusa',ipa:'rusa'},
+{id:'H17',indonesia:'sapi',english:'cow / cattle',kategori:'hewan',rejang:'sapi',ipa:'sapi'},
+{id:'H18',indonesia:'semut',english:'ant',kategori:'hewan',rejang:'semut',ipa:'səmut'},
+{id:'H19',indonesia:'tikus',english:'rat / mouse',kategori:'hewan',rejang:'tikus',ipa:'tikus'},
+{id:'H20',indonesia:'ular',english:'snake',kategori:'hewan',rejang:'ular',ipa:'ular'},
+
+// ── KELUARGA ──────────────────────────────────────────────
+{id:'K01',indonesia:'ibu',english:'mother',kategori:'keluarga',rejang:'ino',ipa:'ino'},
+{id:'K02',indonesia:'ayah / bapak',english:'father',kategori:'keluarga',rejang:'bapeak',ipa:'bapeaʔ',dialek:{bengkulu_utara:{kata:'bapak',ipa:'bapaʔ'}}},
+{id:'K03',indonesia:'kakek',english:'grandfather',kategori:'keluarga',rejang:'kake',ipa:'kakə',dialek:{bengkulu_utara:{kata:'aki',ipa:'aki'}}},
+{id:'K04',indonesia:'nenek',english:'grandmother',kategori:'keluarga',rejang:'yai',ipa:'jai',dialek:{bengkulu_utara:{kata:'ninek',ipa:'ninəʔ'}}},
+{id:'K05',indonesia:'anak',english:'child',kategori:'keluarga',rejang:'anak',ipa:'anak'},
+{id:'K06',indonesia:'kakak',english:'older sibling',kategori:'keluarga',rejang:'kakak',ipa:'kakaʔ'},
+{id:'K07',indonesia:'adik',english:'younger sibling',kategori:'keluarga',rejang:'adek',ipa:'adəʔ'},
+{id:'K08',indonesia:'suami',english:'husband',kategori:'keluarga',rejang:'laki',ipa:'laki'},
+{id:'K09',indonesia:'istri',english:'wife',kategori:'keluarga',rejang:'bini',ipa:'bini'},
+{id:'K10',indonesia:'cucu',english:'grandchild',kategori:'keluarga',rejang:'cucu',ipa:'tʃutʃu'},
+{id:'K11',indonesia:'paman',english:'uncle',kategori:'keluarga',rejang:'mang',ipa:'maŋ',dialek:{bengkulu_utara:{kata:'pak uwan',ipa:'paʔ uwan'}}},
+{id:'K12',indonesia:'bibi',english:'aunt',kategori:'keluarga',rejang:'bik',ipa:'biʔ',dialek:{bengkulu_utara:{kata:'mak uwan',ipa:'maʔ uwan'}}},
+{id:'K13',indonesia:'menantu',english:'son/daughter-in-law',kategori:'keluarga',rejang:'menantu',ipa:'mənantu'},
+{id:'K14',indonesia:'mertua',english:'parent-in-law',kategori:'keluarga',rejang:'mentuo',ipa:'məntuo'},
+{id:'K15',indonesia:'sepupu',english:'cousin',kategori:'keluarga',rejang:'sepupu',ipa:'səpupu'},
+{id:'K16',indonesia:'keponakan',english:'nephew / niece',kategori:'keluarga',rejang:'keponakan',ipa:'kəponakan'},
+{id:'K17',indonesia:'saudara',english:'sibling / relative',kategori:'keluarga',rejang:'sudaro',ipa:'sudaro'},
+{id:'K18',indonesia:'orang tua',english:'parents',kategori:'keluarga',rejang:'urang tuo',ipa:'uraŋ tuo'},
+
+// ── TUBUH ─────────────────────────────────────────────────
+{id:'T01',indonesia:'kepala',english:'head',kategori:'tubuh',rejang:'kepalo',ipa:'kəpalo'},
+{id:'T02',indonesia:'rambut',english:'hair',kategori:'tubuh',rejang:'rambut',ipa:'rambut'},
+{id:'T03',indonesia:'mata',english:'eye',kategori:'tubuh',rejang:'mato',ipa:'mato'},
+{id:'T04',indonesia:'telinga',english:'ear',kategori:'tubuh',rejang:'telingo',ipa:'təliŋo',dialek:{bengkulu_utara:{kata:'kuping',ipa:'kupiŋ'}}},
+{id:'T05',indonesia:'hidung',english:'nose',kategori:'tubuh',rejang:'ung',ipa:'uŋ',dialek:{bengkulu_utara:{kata:'idong',ipa:'idoŋ'}}},
+{id:'T06',indonesia:'mulut',english:'mouth',kategori:'tubuh',rejang:'mulut',ipa:'mulut'},
+{id:'T07',indonesia:'gigi',english:'tooth / teeth',kategori:'tubuh',rejang:'gigi',ipa:'gigi'},
+{id:'T08',indonesia:'lidah',english:'tongue',kategori:'tubuh',rejang:'lidah',ipa:'lidah'},
+{id:'T09',indonesia:'leher',english:'neck',kategori:'tubuh',rejang:'liheak',ipa:'liheaʔ'},
+{id:'T10',indonesia:'bahu',english:'shoulder',kategori:'tubuh',rejang:'bau',ipa:'bau'},
+{id:'T11',indonesia:'dada',english:'chest',kategori:'tubuh',rejang:'dado',ipa:'dado'},
+{id:'T12',indonesia:'perut',english:'stomach / abdomen',kategori:'tubuh',rejang:'perot',ipa:'pərot'},
+{id:'T13',indonesia:'punggung',english:'back (body)',kategori:'tubuh',rejang:'punggung',ipa:'puŋguŋ'},
+{id:'T14',indonesia:'tangan',english:'hand / arm',kategori:'tubuh',rejang:'tangan',ipa:'taŋan'},
+{id:'T15',indonesia:'jari',english:'finger',kategori:'tubuh',rejang:'jari',ipa:'dʒari'},
+{id:'T16',indonesia:'kuku',english:'fingernail',kategori:'tubuh',rejang:'kuku',ipa:'kuku'},
+{id:'T17',indonesia:'kaki',english:'leg / foot',kategori:'tubuh',rejang:'bitis',ipa:'bitis'},
+{id:'T18',indonesia:'lutut',english:'knee',kategori:'tubuh',rejang:'lutut',ipa:'lutut'},
+{id:'T19',indonesia:'darah',english:'blood',kategori:'tubuh',rejang:'darah',ipa:'darah'},
+{id:'T20',indonesia:'tulang',english:'bone',kategori:'tubuh',rejang:'tulang',ipa:'tulaŋ'},
+{id:'T21',indonesia:'kulit',english:'skin',kategori:'tubuh',rejang:'kulit',ipa:'kulit'},
+{id:'T22',indonesia:'jantung',english:'heart',kategori:'tubuh',rejang:'jantung',ipa:'dʒantuŋ'},
+{id:'T23',indonesia:'paru-paru',english:'lungs',kategori:'tubuh',rejang:'paru-paru',ipa:'paru-paru'},
+{id:'T24',indonesia:'bibir',english:'lip',kategori:'tubuh',rejang:'bibir',ipa:'bibir'},
+{id:'T25',indonesia:'dagu',english:'chin',kategori:'tubuh',rejang:'dagu',ipa:'dagu'},
+
+// ── MAKANAN ───────────────────────────────────────────────
+{id:'M01',indonesia:'nasi',english:'cooked rice',kategori:'makanan',rejang:'nasi',ipa:'nasi'},
+{id:'M02',indonesia:'beras',english:'uncooked rice',kategori:'makanan',rejang:'beras',ipa:'bəras'},
+{id:'M03',indonesia:'sayur',english:'vegetable',kategori:'makanan',rejang:'sayur',ipa:'sayur'},
+{id:'M04',indonesia:'daging',english:'meat',kategori:'makanan',rejang:'daging',ipa:'dagiŋ'},
+{id:'M05',indonesia:'garam',english:'salt',kategori:'makanan',rejang:'garam',ipa:'garam'},
+{id:'M06',indonesia:'gula',english:'sugar',kategori:'makanan',rejang:'gulo',ipa:'gulo'},
+{id:'M07',indonesia:'minyak',english:'oil',kategori:'makanan',rejang:'minyak',ipa:'miɲaʔ'},
+{id:'M08',indonesia:'telur',english:'egg',kategori:'makanan',rejang:'telua',ipa:'tëlua'},
+{id:'M09',indonesia:'pisang',english:'banana',kategori:'makanan',rejang:'pisang',ipa:'pisaŋ'},
+{id:'M10',indonesia:'kelapa',english:'coconut',kategori:'makanan',rejang:'kelapa',ipa:'kəlapa'},
+{id:'M11',indonesia:'singkong / ubi',english:'cassava',kategori:'makanan',rejang:'ubi',ipa:'ubi'},
+{id:'M12',indonesia:'kopi',english:'coffee',kategori:'makanan',rejang:'kopi',ipa:'kopi'},
+{id:'M13',indonesia:'teh',english:'tea',kategori:'makanan',rejang:'teh',ipa:'teh'},
+{id:'M14',indonesia:'susu',english:'milk',kategori:'makanan',rejang:'susu',ipa:'susu'},
+{id:'M15',indonesia:'madu',english:'honey',kategori:'makanan',rejang:'madu',ipa:'madu'},
+{id:'M16',indonesia:'cabe / cabai',english:'chilli pepper',kategori:'makanan',rejang:'lado',ipa:'lado'},
+{id:'M17',indonesia:'bawang',english:'onion / shallot',kategori:'makanan',rejang:'bawang',ipa:'bawaŋ'},
+{id:'M18',indonesia:'kangkung',english:'water spinach',kategori:'makanan',rejang:'kangkung',ipa:'kaŋkuŋ'},
+{id:'M19',indonesia:'durian',english:'durian',kategori:'makanan',rejang:'durian',ipa:'durian'},
+{id:'M20',indonesia:'rambutan',english:'rambutan',kategori:'makanan',rejang:'rambutan',ipa:'rambutan'},
+{id:'M21',indonesia:'air minum',english:'drinking water',kategori:'makanan',rejang:'wai ngen',ipa:'wai ŋen'},
+{id:'M22',indonesia:'ikan goreng',english:'fried fish',kategori:'makanan',rejang:'ikan goreng',ipa:'ikan gorəŋ'},
+{id:'M23',indonesia:'buah-buahan',english:'fruits',kategori:'makanan',rejang:'buah-buahan',ipa:'buah-buahan'},
+
+// ── ANGKA ─────────────────────────────────────────────────
+{id:'N01',indonesia:'satu',english:'one',kategori:'angka',rejang:"sa'ei",ipa:"saʔei",dialek:{bengkulu_utara:{kata:'saei',ipa:'saei'}}},
+{id:'N02',indonesia:'dua',english:'two',kategori:'angka',rejang:'duei',ipa:'duei'},
+{id:'N03',indonesia:'tiga',english:'three',kategori:'angka',rejang:'telo',ipa:'telo'},
+{id:'N04',indonesia:'empat',english:'four',kategori:'angka',rejang:'mpat',ipa:'mpat'},
+{id:'N05',indonesia:'lima',english:'five',kategori:'angka',rejang:'limo',ipa:'limo'},
+{id:'N06',indonesia:'enam',english:'six',kategori:'angka',rejang:'enam',ipa:'enam'},
+{id:'N07',indonesia:'tujuh',english:'seven',kategori:'angka',rejang:'tujoh',ipa:'tujoh',dialek:{bengkulu_utara:{kata:'tujuh',ipa:'tujuh'}}},
+{id:'N08',indonesia:'delapan',english:'eight',kategori:'angka',rejang:'delapan',ipa:'dəlapan'},
+{id:'N09',indonesia:'sembilan',english:'nine',kategori:'angka',rejang:"sebo'",ipa:'səboʔ',dialek:{bengkulu_tengah:{kata:'sebo',ipa:'səbo'}}},
+{id:'N10',indonesia:'sepuluh',english:'ten',kategori:'angka',rejang:'sepuloh',ipa:'səpuloh',dialek:{bengkulu_utara:{kata:'sepuluh',ipa:'səpuluh'}}},
+{id:'N11',indonesia:'sebelas',english:'eleven',kategori:'angka',rejang:"belas sa'ei",ipa:"bəlas saʔei"},
+{id:'N12',indonesia:'dua belas',english:'twelve',kategori:'angka',rejang:'belas duei',ipa:'bəlas duei'},
+{id:'N13',indonesia:'dua puluh',english:'twenty',kategori:'angka',rejang:'duei puloh',ipa:'duei puloh'},
+{id:'N14',indonesia:'seratus',english:'one hundred',kategori:'angka',rejang:'seratus',ipa:'səratus'},
+{id:'N15',indonesia:'seribu',english:'one thousand',kategori:'angka',rejang:'seribu',ipa:'səribu'},
+
+// ── KEGIATAN ──────────────────────────────────────────────
+{id:'G01',indonesia:'ambil',english:'take / pick up',kategori:'kegiatan',rejang:'ambik',ipa:'ambiʔ'},
+{id:'G02',indonesia:'bangun (dari tidur)',english:'wake up',kategori:'kegiatan',rejang:'bangun',ipa:'baŋun'},
+{id:'G03',indonesia:'bawa',english:'carry / bring',kategori:'kegiatan',rejang:'bawa',ipa:'bawa'},
+{id:'G04',indonesia:'beli',english:'buy / purchase',kategori:'kegiatan',rejang:'beli',ipa:'bəli'},
+{id:'G05',indonesia:'berdiri',english:'stand',kategori:'kegiatan',rejang:'tegak',ipa:'tëgaʔ'},
+{id:'G06',indonesia:'beri',english:'give',kategori:'kegiatan',rejang:'beri',ipa:'bəri'},
+{id:'G07',indonesia:'berbicara',english:'speak / talk',kategori:'kegiatan',rejang:'cakap',ipa:'tʃakaP'},
+{id:'G08',indonesia:'buka',english:'open',kategori:'kegiatan',rejang:'buko',ipa:'buko'},
+{id:'G09',indonesia:'cuci',english:'wash',kategori:'kegiatan',rejang:'cuci',ipa:'tʃutʃi'},
+{id:'G10',indonesia:'datang',english:'come / arrive',kategori:'kegiatan',rejang:'datok',ipa:'datok',dialek:{bengkulu_tengah:{kata:'tibo',ipa:'tibo'}}},
+{id:'G11',indonesia:'dengar',english:'hear / listen',kategori:'kegiatan',rejang:'denger',ipa:'dəŋər'},
+{id:'G12',indonesia:'duduk',english:'sit',kategori:'kegiatan',rejang:'duduk',ipa:'duduʔ'},
+{id:'G13',indonesia:'jalan / berjalan',english:'walk',kategori:'kegiatan',rejang:'jalan',ipa:'dʒalan'},
+{id:'G14',indonesia:'jual',english:'sell',kategori:'kegiatan',rejang:'jual',ipa:'dʒual'},
+{id:'G15',indonesia:'kerja',english:'work',kategori:'kegiatan',rejang:'kerjo',ipa:'kərjo'},
+{id:'G16',indonesia:'lahir',english:'be born',kategori:'kegiatan',rejang:'lahir',ipa:'lahir'},
+{id:'G17',indonesia:'lari',english:'run',kategori:'kegiatan',rejang:'lem',ipa:'lem'},
+{id:'G18',indonesia:'lihat',english:'see / look',kategori:'kegiatan',rejang:'tingo',ipa:'tiŋo'},
+{id:'G19',indonesia:'makan',english:'eat',kategori:'kegiatan',rejang:'ngen',ipa:'ŋen',dialek:{kepahiang:{kata:'ngon',ipa:'ŋon'},bengkulu_tengah:{kata:'man',ipa:'man'}}},
+{id:'G20',indonesia:'mandi',english:'bathe / shower',kategori:'kegiatan',rejang:'mandi',ipa:'mandi'},
+{id:'G21',indonesia:'masak',english:'cook',kategori:'kegiatan',rejang:'masak',ipa:'masaʔ'},
+{id:'G22',indonesia:'mati',english:'die / pass away',kategori:'kegiatan',rejang:'mati',ipa:'mati'},
+{id:'G23',indonesia:'membaca',english:'read',kategori:'kegiatan',rejang:'baco',ipa:'batʃo'},
+{id:'G24',indonesia:'mengajar',english:'teach',kategori:'kegiatan',rejang:'ngajar',ipa:'ŋadʒar'},
+{id:'G25',indonesia:'menulis',english:'write',kategori:'kegiatan',rejang:'nulis',ipa:'nulis'},
+{id:'G26',indonesia:'minum',english:'drink',kategori:'kegiatan',rejang:'minom',ipa:'minom',dialek:{bengkulu_utara:{kata:'minem',ipa:'minəm'}}},
+{id:'G27',indonesia:'naik',english:'go up / climb',kategori:'kegiatan',rejang:'nyakat',ipa:'ɲakat'},
+{id:'G28',indonesia:'nyanyi / bernyanyi',english:'sing',kategori:'kegiatan',rejang:'nyanyi',ipa:'ɲaɲi'},
+{id:'G29',indonesia:'pergi',english:'go / leave',kategori:'kegiatan',rejang:'lop',ipa:'lop',dialek:{bengkulu_utara:{kata:'luop',ipa:'luop'}}},
+{id:'G30',indonesia:'pulang',english:'return / go home',kategori:'kegiatan',rejang:'balik',ipa:'balik'},
+{id:'G31',indonesia:'tanya',english:'ask a question',kategori:'kegiatan',rejang:'tanyo',ipa:'taɲo'},
+{id:'G32',indonesia:'tidur',english:'sleep',kategori:'kegiatan',rejang:'medep',ipa:'medep',dialek:{bengkulu_tengah:{kata:'medem',ipa:'medəm'}}},
+{id:'G33',indonesia:'turun',english:'go down / descend',kategori:'kegiatan',rejang:'turun',ipa:'turun'},
+{id:'G34',indonesia:'belajar',english:'study / learn',kategori:'kegiatan',rejang:'belajar',ipa:'bəladʒar'},
+{id:'G35',indonesia:'menangis',english:'cry / weep',kategori:'kegiatan',rejang:'nangis',ipa:'naŋis'},
+{id:'G36',indonesia:'tertawa',english:'laugh',kategori:'kegiatan',rejang:'ketawa',ipa:'kətawa'},
+{id:'G37',indonesia:'main / bermain',english:'play',kategori:'kegiatan',rejang:'main',ipa:'main'},
+{id:'G38',indonesia:'taruh / letak',english:'put / place',kategori:'kegiatan',rejang:'taruh',ipa:'taruh'},
+
+// ── SIFAT ─────────────────────────────────────────────────
+{id:'S01',indonesia:'bagus / indah',english:'good / beautiful',kategori:'sifat',rejang:'lemak',ipa:'ləmaʔ'},
+{id:'S02',indonesia:'banyak',english:'many / a lot',kategori:'sifat',rejang:'banyak',ipa:'baɲaʔ'},
+{id:'S03',indonesia:'baru',english:'new',kategori:'sifat',rejang:'baru',ipa:'baru'},
+{id:'S04',indonesia:'berat',english:'heavy',kategori:'sifat',rejang:'berat',ipa:'bərat'},
+{id:'S05',indonesia:'besar',english:'big / large',kategori:'sifat',rejang:'gedang',ipa:'gədaŋ',dialek:{bengkulu_utara:{kata:'gede',ipa:'gede'}}},
+{id:'S06',indonesia:'benar / betul',english:'true / correct',kategori:'sifat',rejang:'beno',ipa:'bəno'},
+{id:'S07',indonesia:'biru',english:'blue',kategori:'sifat',rejang:'biru',ipa:'biru'},
+{id:'S08',indonesia:'buruk / jelek',english:'bad / ugly',kategori:'sifat',rejang:'burok',ipa:'buroʔ'},
+{id:'S09',indonesia:'cepat',english:'fast / quick',kategori:'sifat',rejang:'kancang',ipa:'kantʃaŋ'},
+{id:'S10',indonesia:'dingin',english:'cold',kategori:'sifat',rejang:'bedien',ipa:'bədiən',dialek:{bengkulu_utara:{kata:'besio',ipa:'bəsio'}}},
+{id:'S11',indonesia:'gelap',english:'dark',kategori:'sifat',rejang:'gelap',ipa:'gəlap'},
+{id:'S12',indonesia:'hijau',english:'green',kategori:'sifat',rejang:'ijo',ipa:'idʒo'},
+{id:'S13',indonesia:'hitam',english:'black',kategori:'sifat',rejang:'itam',ipa:'itam'},
+{id:'S14',indonesia:'jauh',english:'far',kategori:'sifat',rejang:'jauah',ipa:'dʒauah'},
+{id:'S15',indonesia:'kaya',english:'rich / wealthy',kategori:'sifat',rejang:'kayo',ipa:'kayo'},
+{id:'S16',indonesia:'kecil',english:'small / little',kategori:'sifat',rejang:"keci'",ipa:'kəciʔ',dialek:{kepahiang:{kata:'kecik',ipa:'kəciʔ'},bengkulu_tengah:{kata:'kecik',ipa:'kəciʔ'}}},
+{id:'S17',indonesia:'keras',english:'hard',kategori:'sifat',rejang:'keras',ipa:'kəras'},
+{id:'S18',indonesia:'kosong',english:'empty',kategori:'sifat',rejang:'kosong',ipa:'kosoŋ'},
+{id:'S19',indonesia:'kuning',english:'yellow',kategori:'sifat',rejang:'kuning',ipa:'kuniŋ'},
+{id:'S20',indonesia:'lambat',english:'slow',kategori:'sifat',rejang:'lambat',ipa:'lambat'},
+{id:'S21',indonesia:'lama',english:'old / long time',kategori:'sifat',rejang:'lamo',ipa:'lamo'},
+{id:'S22',indonesia:'lunak',english:'soft',kategori:'sifat',rejang:'lunak',ipa:'lunaʔ'},
+{id:'S23',indonesia:'merah',english:'red',kategori:'sifat',rejang:'merah',ipa:'merah'},
+{id:'S24',indonesia:'miskin',english:'poor',kategori:'sifat',rejang:'miskin',ipa:'miskin'},
+{id:'S25',indonesia:'muda',english:'young',kategori:'sifat',rejang:'mudo',ipa:'mudo'},
+{id:'S26',indonesia:'panas',english:'hot',kategori:'sifat',rejang:'angat',ipa:'aŋat'},
+{id:'S27',indonesia:'panjang',english:'long',kategori:'sifat',rejang:'panjang',ipa:'pandʒaŋ'},
+{id:'S28',indonesia:'pendek',english:'short',kategori:'sifat',rejang:'pendek',ipa:'pəndəʔ'},
+{id:'S29',indonesia:'penuh',english:'full',kategori:'sifat',rejang:'penuh',ipa:'pənuh'},
+{id:'S30',indonesia:'putih',english:'white',kategori:'sifat',rejang:'putih',ipa:'putih'},
+{id:'S31',indonesia:'ringan',english:'light (weight)',kategori:'sifat',rejang:'ringan',ipa:'riŋan'},
+{id:'S32',indonesia:'salah',english:'wrong / mistaken',kategori:'sifat',rejang:'salah',ipa:'salah'},
+{id:'S33',indonesia:'sedikit',english:'a little / few',kategori:'sifat',rejang:'sikit',ipa:'sikit'},
+{id:'S34',indonesia:'terang',english:'bright / light',kategori:'sifat',rejang:'terang',ipa:'təraŋ'},
+{id:'S35',indonesia:'tinggi',english:'tall / high',kategori:'sifat',rejang:'tinggi',ipa:'tiŋgi'},
+{id:'S36',indonesia:'tua',english:'old (age/thing)',kategori:'sifat',rejang:'tuo',ipa:'tuo'},
+{id:'S37',indonesia:'coklat',english:'brown',kategori:'sifat',rejang:'coklat',ipa:'tʃoklat'},
+{id:'S38',indonesia:'abu-abu',english:'grey',kategori:'sifat',rejang:'abu-abu',ipa:'abu-abu'},
+{id:'S39',indonesia:'ungu',english:'purple',kategori:'sifat',rejang:'ungu',ipa:'uŋu'},
+
+// ── WAKTU ─────────────────────────────────────────────────
+{id:'W01',indonesia:'hari',english:'day',kategori:'waktu',rejang:'ari',ipa:'ari'},
+{id:'W02',indonesia:'malam',english:'night',kategori:'waktu',rejang:'malam',ipa:'malam'},
+{id:'W03',indonesia:'pagi',english:'morning',kategori:'waktu',rejang:'pagi',ipa:'pagi'},
+{id:'W04',indonesia:'siang',english:'noon / daytime',kategori:'waktu',rejang:'siang',ipa:'siaŋ'},
+{id:'W05',indonesia:'sore',english:'afternoon / evening',kategori:'waktu',rejang:'sore',ipa:'sore'},
+{id:'W06',indonesia:'kemarin',english:'yesterday',kategori:'waktu',rejang:'kemaen',ipa:'kəmaen',dialek:{bengkulu_utara:{kata:'kemarin',ipa:'kəmarin'}}},
+{id:'W07',indonesia:'hari ini',english:'today',kategori:'waktu',rejang:'ari ini',ipa:'ari ini',dialek:{lebong:{kata:'ari kini',ipa:'ari kini'}}},
+{id:'W08',indonesia:'besok',english:'tomorrow',kategori:'waktu',rejang:'beso',ipa:'bəso',dialek:{bengkulu_utara:{kata:'besok',ipa:'bəsoʔ'}}},
+{id:'W09',indonesia:'minggu',english:'week',kategori:'waktu',rejang:'minggu',ipa:'miŋgu'},
+{id:'W10',indonesia:'bulan (waktu)',english:'month',kategori:'waktu',rejang:'bulan',ipa:'bulan'},
+{id:'W11',indonesia:'tahun',english:'year',kategori:'waktu',rejang:'taun',ipa:'taun'},
+{id:'W12',indonesia:'sekarang',english:'now / at this moment',kategori:'waktu',rejang:'kini',ipa:'kini',dialek:{bengkulu_utara:{kata:'sekarang',ipa:'səkaraŋ'}}},
+{id:'W13',indonesia:'dulu',english:'before / in the past',kategori:'waktu',rejang:'dulu',ipa:'dulu'},
+{id:'W14',indonesia:'nanti',english:'later',kategori:'waktu',rejang:'nantik',ipa:'nantik'},
+{id:'W15',indonesia:'selalu',english:'always',kategori:'waktu',rejang:'selalu',ipa:'sëlalu'},
+{id:'W16',indonesia:'kadang-kadang',english:'sometimes',kategori:'waktu',rejang:'kadang-kadang',ipa:'kadaŋ-kadaŋ'},
+{id:'W17',indonesia:'lusa',english:'day after tomorrow',kategori:'waktu',rejang:'lusa',ipa:'lusa'},
+
+// ── PERASAAN ──────────────────────────────────────────────
+{id:'E01',indonesia:'senang / gembira',english:'happy / glad',kategori:'perasaan',rejang:'senang',ipa:'sënaŋ'},
+{id:'E02',indonesia:'sedih',english:'sad',kategori:'perasaan',rejang:'sedih',ipa:'sëdih'},
+{id:'E03',indonesia:'marah',english:'angry',kategori:'perasaan',rejang:'marah',ipa:'marah'},
+{id:'E04',indonesia:'takut',english:'afraid / scared',kategori:'perasaan',rejang:'takut',ipa:'takut'},
+{id:'E05',indonesia:'cinta / sayang',english:'love / affection',kategori:'perasaan',rejang:'cinto',ipa:'tʃinto'},
+{id:'E06',indonesia:'rindu',english:'miss / longing',kategori:'perasaan',rejang:'rindu',ipa:'rindu'},
+{id:'E07',indonesia:'lapar',english:'hungry',kategori:'perasaan',rejang:'lapar',ipa:'lapar'},
+{id:'E08',indonesia:'haus',english:'thirsty',kategori:'perasaan',rejang:'haus',ipa:'haus',dialek:{lebong:{kata:'dahi',ipa:'dahi'}}},
+{id:'E09',indonesia:'lelah / capek',english:'tired / exhausted',kategori:'perasaan',rejang:'penat',ipa:'pənat'},
+{id:'E10',indonesia:'sakit',english:'sick / in pain',kategori:'perasaan',rejang:'sakit',ipa:'sakit'},
+{id:'E11',indonesia:'sehat',english:'healthy / well',kategori:'perasaan',rejang:'sehat',ipa:'sëhat'},
+{id:'E12',indonesia:'malu',english:'shy / embarrassed',kategori:'perasaan',rejang:'malu',ipa:'malu'},
+{id:'E13',indonesia:'ingat',english:'remember',kategori:'perasaan',rejang:'ingat',ipa:'iŋat'},
+{id:'E14',indonesia:'lupa',english:'forget',kategori:'perasaan',rejang:'lupo',ipa:'lupo'},
+{id:'E15',indonesia:'bingung',english:'confused',kategori:'perasaan',rejang:'bingung',ipa:'biŋuŋ'},
+{id:'E16',indonesia:'bosan',english:'bored',kategori:'perasaan',rejang:'bosan',ipa:'bosan'},
+
+// ── TEMPAT ────────────────────────────────────────────────
+{id:'L01',indonesia:'rumah',english:'house / home',kategori:'tempat',rejang:'umeak',ipa:'umeaʔ',dialek:{bengkulu_tengah:{kata:'umea',ipa:'umea'}}},
+{id:'L02',indonesia:'jalan',english:'road / street',kategori:'tempat',rejang:'jalan',ipa:'dʒalan'},
+{id:'L03',indonesia:'pasar',english:'market',kategori:'tempat',rejang:'pasar',ipa:'pasar'},
+{id:'L04',indonesia:'sekolah',english:'school',kategori:'tempat',rejang:'sekolah',ipa:'sëkolah'},
+{id:'L05',indonesia:'masjid',english:'mosque',kategori:'tempat',rejang:'masjid',ipa:'masdʒid'},
+{id:'L06',indonesia:'desa / dusun',english:'village',kategori:'tempat',rejang:'dusun',ipa:'dusun'},
+{id:'L07',indonesia:'kota',english:'city / town',kategori:'tempat',rejang:'koto',ipa:'koto'},
+{id:'L08',indonesia:'negara',english:'country / nation',kategori:'tempat',rejang:'negaro',ipa:'nëgaro'},
+{id:'L09',indonesia:'sumur',english:'well (water)',kategori:'tempat',rejang:'sumur',ipa:'sumur'},
+{id:'L10',indonesia:'sawah (tempat)',english:'rice field',kategori:'tempat',rejang:'umo',ipa:'umo'},
+{id:'L11',indonesia:'rumah sakit',english:'hospital',kategori:'tempat',rejang:'rumah sakit',ipa:'rumah sakit'},
+{id:'L12',indonesia:'kantor',english:'office',kategori:'tempat',rejang:'kantor',ipa:'kantor'},
+
+// ── ARAH ──────────────────────────────────────────────────
+{id:'D01',indonesia:'atas',english:'above / up',kategori:'arah',rejang:'atas',ipa:'atas'},
+{id:'D02',indonesia:'bawah',english:'below / down',kategori:'arah',rejang:'bawah',ipa:'bawah'},
+{id:'D03',indonesia:'depan',english:'front / forward',kategori:'arah',rejang:'depan',ipa:'dëpan'},
+{id:'D04',indonesia:'belakang',english:'back / behind',kategori:'arah',rejang:'belakang',ipa:'bëlakaŋ'},
+{id:'D05',indonesia:'kiri',english:'left',kategori:'arah',rejang:'kiri',ipa:'kiri'},
+{id:'D06',indonesia:'kanan',english:'right',kategori:'arah',rejang:'kanan',ipa:'kanan'},
+{id:'D07',indonesia:'dalam',english:'inside / deep',kategori:'arah',rejang:'dalam',ipa:'dalam'},
+{id:'D08',indonesia:'luar',english:'outside',kategori:'arah',rejang:'luar',ipa:'luar'},
+{id:'D09',indonesia:'di sini',english:'here',kategori:'arah',rejang:'inak',ipa:'inaʔ'},
+{id:'D10',indonesia:'di sana',english:'there',kategori:'arah',rejang:'iton',ipa:'iton'},
+{id:'D11',indonesia:'dekat',english:'near / close',kategori:'arah',rejang:'eket',ipa:'ëkët'},
+{id:'D12',indonesia:'jauh (arah)',english:'far away',kategori:'arah',rejang:'jauah',ipa:'dʒauah'},
+{id:'D13',indonesia:'utara',english:'north',kategori:'arah',rejang:'utara',ipa:'utara'},
+{id:'D14',indonesia:'selatan',english:'south',kategori:'arah',rejang:'selatan',ipa:'sëlatan'},
+{id:'D15',indonesia:'timur',english:'east',kategori:'arah',rejang:'timur',ipa:'timur'},
+{id:'D16',indonesia:'barat',english:'west',kategori:'arah',rejang:'barat',ipa:'barat'},
+
+// ── KATA GANTI ────────────────────────────────────────────
+{id:'P01',indonesia:'saya / aku',english:'I / me',kategori:'kata_ganti',rejang:'uku',ipa:'uku'},
+{id:'P02',indonesia:'kamu / kau',english:'you (singular)',kategori:'kata_ganti',rejang:'kite',ipa:'kitə'},
+{id:'P03',indonesia:'dia / ia',english:'he / she / it',kategori:'kata_ganti',rejang:"bi'ei",ipa:'biʔei',dialek:{kepahiang:{kata:'bie',ipa:'bie'}}},
+{id:'P04',indonesia:'kita / kami',english:'we / us',kategori:'kata_ganti',rejang:'kito',ipa:'kito'},
+{id:'P05',indonesia:'kalian',english:'you (plural)',kategori:'kata_ganti',rejang:'ngan',ipa:'ŋan'},
+{id:'P06',indonesia:'mereka',english:'they / them',kategori:'kata_ganti',rejang:'urang',ipa:'uraŋ'},
+{id:'P07',indonesia:'ini',english:'this',kategori:'kata_ganti',rejang:'ini / inek',ipa:'ini'},
+{id:'P08',indonesia:'itu',english:'that',kategori:'kata_ganti',rejang:'itu / iton',ipa:'itu'},
+
+// ── KATA TANYA ────────────────────────────────────────────
+{id:'Q01',indonesia:'apa',english:'what',kategori:'kata_tanya',rejang:'apo',ipa:'apo'},
+{id:'Q02',indonesia:'siapa',english:'who',kategori:'kata_tanya',rejang:'siapo',ipa:'siapo'},
+{id:'Q03',indonesia:'di mana / mana',english:'where',kategori:'kata_tanya',rejang:'mano',ipa:'mano'},
+{id:'Q04',indonesia:'kapan',english:'when',kategori:'kata_tanya',rejang:'kapan',ipa:'kapan'},
+{id:'Q05',indonesia:'mengapa / kenapa',english:'why',kategori:'kata_tanya',rejang:'ngapo',ipa:'ŋapo'},
+{id:'Q06',indonesia:'berapa',english:'how many / how much',kategori:'kata_tanya',rejang:'berapo',ipa:'bərapo'},
+{id:'Q07',indonesia:'bagaimana',english:'how',kategori:'kata_tanya',rejang:'macam mano',ipa:'matʃam mano'},
+
+// ── UNGKAPAN ──────────────────────────────────────────────
+{id:'U01',indonesia:'terima kasih',english:'thank you',kategori:'ungkapan',rejang:"mo te'",ipa:'mo teʔ',dialek:{bengkulu_utara:{kata:'mak asih',ipa:'maʔ asih'}}},
+{id:'U02',indonesia:'selamat pagi',english:'good morning',kategori:'ungkapan',rejang:'slamat pagi',ipa:'slamat pagi'},
+{id:'U03',indonesia:'selamat sore',english:'good afternoon',kategori:'ungkapan',rejang:'slamat sore',ipa:'slamat sore'},
+{id:'U04',indonesia:'selamat malam',english:'good evening',kategori:'ungkapan',rejang:'slamat malam',ipa:'slamat malam'},
+{id:'U05',indonesia:'selamat datang',english:'welcome',kategori:'ungkapan',rejang:'slamat datok',ipa:'slamat datok'},
+{id:'U06',indonesia:'selamat tinggal',english:'goodbye',kategori:'ungkapan',rejang:'slamat tinggal',ipa:'slamat tiŋgal'},
+{id:'U07',indonesia:'ya',english:'yes',kategori:'ungkapan',rejang:'iyo',ipa:'iyo'},
+{id:'U08',indonesia:'tidak / bukan',english:'no / not',kategori:'ungkapan',rejang:'dak',ipa:'daʔ',dialek:{rejang_lebong:{kata:'nggai',ipa:'ŋgai'}}},
+{id:'U09',indonesia:'tolong',english:'please / help',kategori:'ungkapan',rejang:'tolong',ipa:'toloŋ'},
+{id:'U10',indonesia:'maaf',english:'sorry / excuse me',kategori:'ungkapan',rejang:'maaf',ipa:'maaf'},
+{id:'U11',indonesia:'tidak apa-apa',english:"it's okay / never mind",kategori:'ungkapan',rejang:'dak apo',ipa:'daʔ apo'},
+{id:'U12',indonesia:'apa kabar?',english:'how are you?',kategori:'ungkapan',rejang:'macam mano?',ipa:'matʃam mano'},
+{id:'U13',indonesia:'baik-baik saja',english:"I'm fine / all is well",kategori:'ungkapan',rejang:'baik-baik bae',ipa:'baik-baik bae'},
+{id:'U14',indonesia:'nama saya ...',english:'my name is ...',kategori:'ungkapan',rejang:'namo uku ...',ipa:'namo uku'},
+{id:'U15',indonesia:'ayo / mari',english:"let's go / come on",kategori:'ungkapan',rejang:'ayo / mari',ipa:'ayo'},
+
+// ── LAIN-LAIN ─────────────────────────────────────────────
+{id:'C01',indonesia:'dan',english:'and',kategori:'lain',rejang:'ngan',ipa:'ŋan'},
+{id:'C02',indonesia:'atau',english:'or',kategori:'lain',rejang:'atau',ipa:'atau'},
+{id:'C03',indonesia:'tetapi / tapi',english:'but / however',kategori:'lain',rejang:'tapi',ipa:'tapi'},
+{id:'C04',indonesia:'karena',english:'because',kategori:'lain',rejang:'kerno',ipa:'kərno'},
+{id:'C05',indonesia:'jika / kalau',english:'if',kategori:'lain',rejang:'kalau',ipa:'kalau'},
+{id:'C06',indonesia:'sudah / telah',english:'already / have done',kategori:'lain',rejang:'la / lah',ipa:'la'},
+{id:'C07',indonesia:'belum',english:'not yet',kategori:'lain',rejang:'belum',ipa:'bəlum'},
+{id:'C08',indonesia:'mau / ingin',english:'want / wish',kategori:'lain',rejang:'mau / nak',ipa:'mau'},
+{id:'C09',indonesia:'bisa / dapat',english:'can / be able to',kategori:'lain',rejang:'biso',ipa:'biso'},
+{id:'C10',indonesia:'harus',english:'must / have to',kategori:'lain',rejang:'harus',ipa:'harus'},
+{id:'C11',indonesia:'suka',english:'like / enjoy',kategori:'lain',rejang:'suko',ipa:'suko'},
+{id:'C12',indonesia:'tahu',english:'know',kategori:'lain',rejang:'tau',ipa:'tau'},
+{id:'C13',indonesia:'ada',english:'there is / exist',kategori:'lain',rejang:'ado',ipa:'ado'},
+{id:'C14',indonesia:'tidak ada',english:"there isn't / none",kategori:'lain',rejang:'dak ado',ipa:'daʔ ado'},
+{id:'C15',indonesia:'orang',english:'person / people',kategori:'lain',rejang:'urang',ipa:'uraŋ'},
+{id:'C16',indonesia:'nama',english:'name',kategori:'lain',rejang:'namo',ipa:'namo'},
+{id:'C17',indonesia:'laki-laki',english:'man / male',kategori:'lain',rejang:'urang laki',ipa:'uraŋ laki'},
+{id:'C18',indonesia:'perempuan',english:'woman / female',kategori:'lain',rejang:'urang bini',ipa:'uraŋ bini'},
+{id:'C19',indonesia:'umur',english:'age',kategori:'lain',rejang:'umur',ipa:'umur'},
+{id:'C20',indonesia:'lagi',english:'again / more',kategori:'lain',rejang:'lagi',ipa:'lagi'},
+];
+
+// Build full dialect objects
+const KOSAKATA = RAW.map(item => ({
+  ...item,
+  _dialek: Object.fromEntries(ALL_DIALEK.map(d => [d, resolve(item,d)]))
+}));
+
+document.getElementById('statTotal').textContent = KOSAKATA.length;
+
+// ============================================================
+// KAGANGA DATA
+// ============================================================
+const KAGANGA_KONSONAN = [
+  {huruf:'ꤰ',unicode:'U+A930',latin:'ka',ipa:'k',nama:'Ka',contoh:'ꤰꥇꤳ (kite = kamu)'},
+  {huruf:'ꤱ',unicode:'U+A931',latin:'ga',ipa:'g',nama:'Ga',contoh:'ꤱꤴꤲ (gedang = besar)'},
+  {huruf:'ꤲ',unicode:'U+A932',latin:'nga',ipa:'ŋ',nama:'Nga',contoh:'ꤲꤵ (ngen = makan)'},
+  {huruf:'ꤳ',unicode:'U+A933',latin:'ta',ipa:'t',nama:'Ta',contoh:'ꤳꤾꥋ (telo = tiga)'},
+  {huruf:'ꤴ',unicode:'U+A934',latin:'da',ipa:'d',nama:'Da',contoh:'ꤴꥈꥊ (duei = dua)'},
+  {huruf:'ꤵ',unicode:'U+A935',latin:'na',ipa:'n',nama:'Na',contoh:'ꤵꥋ (no = itu)'},
+  {huruf:'ꤶ',unicode:'U+A936',latin:'pa',ipa:'p',nama:'Pa',contoh:'ꤶꤱꥇ (pagi = pagi)'},
+  {huruf:'ꤷ',unicode:'U+A937',latin:'ba',ipa:'b',nama:'Ba',contoh:'ꤷꥈꤾꤵ (bulan = bulan)'},
+  {huruf:'ꤸ',unicode:'U+A938',latin:'ma',ipa:'m',nama:'Ma',contoh:'ꤸꤳꥋ (mato = mata)'},
+  {huruf:'ꤹ',unicode:'U+A939',latin:'ca',ipa:'tʃ',nama:'Ca',contoh:'ꤰꤹꥇꤰ (keci = kecil)'},
+  {huruf:'ꤺ',unicode:'U+A93A',latin:'ja',ipa:'dʒ',nama:'Ja',contoh:'ꤺꥈꤰꤾ (jual = jual)'},
+  {huruf:'ꤻ',unicode:'U+A93B',latin:'nya',ipa:'ɲ',nama:'Nya',contoh:'ꤻꤰꤳ (nyakat = naik)'},
+  {huruf:'ꤼ',unicode:'U+A93C',latin:'sa',ipa:'s',nama:'Sa',contoh:'ꤼꤰꥊ (sa\'ei = satu)'},
+  {huruf:'ꤽ',unicode:'U+A93D',latin:'ra',ipa:'r',nama:'Ra',contoh:'ꤽꥈꤸꤰ (rumak = rumput)'},
+  {huruf:'ꤾ',unicode:'U+A93E',latin:'la',ipa:'l',nama:'La',contoh:'ꤾꥇꤸꥋ (limo = lima)'},
+  {huruf:'ꤿ',unicode:'U+A93F',latin:'ya',ipa:'j',nama:'Ya',contoh:'ꤿꥊ (yai = nenek)'},
+  {huruf:'ꥀ',unicode:'U+A940',latin:'wa',ipa:'w',nama:'Wa',contoh:'ꥀꤰꥇ (wai = air)'},
+  {huruf:'ꥁ',unicode:'U+A941',latin:'ha',ipa:'h',nama:'Ha',contoh:'ꥁꤰꥇ (hai = halo)'},
+  {huruf:'ꥂ',unicode:'U+A942',latin:'mba',ipa:'mb',nama:'Mba',contoh:'bunyi mb'},
+  {huruf:'ꥃ',unicode:'U+A943',latin:'ngga',ipa:'ŋɡ',nama:'Ngga',contoh:'bunyi ngg'},
+  {huruf:'ꥄ',unicode:'U+A944',latin:'nda',ipa:'nd',nama:'Nda',contoh:'bunyi nd'},
+  {huruf:'ꥅ',unicode:'U+A945',latin:'ndra',ipa:'ndr',nama:'Ndra',contoh:'bunyi ndr'},
+  {huruf:'ꥆ',unicode:'U+A946',latin:'ngka',ipa:'ŋk',nama:'Ngka',contoh:'bunyi ngk'},
+];
+const KAGANGA_VOKAL = [
+  {huruf:'ꥇ',unicode:'U+A947',latin:'i',ipa:'i',nama:'Vokal I',contoh:'ꤰꥇ = ki'},
+  {huruf:'ꥈ',unicode:'U+A948',latin:'u',ipa:'u',nama:'Vokal U',contoh:'ꤰꥈ = ku'},
+  {huruf:'ꥉ',unicode:'U+A949',latin:'e',ipa:'e',nama:'Vokal E',contoh:'ꤰꥉ = ke'},
+  {huruf:'ꥊ',unicode:'U+A94A',latin:'ai',ipa:'ai',nama:'Vokal AI',contoh:'ꤰꥊ = kai'},
+  {huruf:'ꥋ',unicode:'U+A94B',latin:'o',ipa:'o',nama:'Vokal O',contoh:'ꤰꥋ = ko'},
+  {huruf:'ꥌ',unicode:'U+A94C',latin:'au',ipa:'au',nama:'Vokal AU',contoh:'ꤰꥌ = kau'},
+  {huruf:'ꥍ',unicode:'U+A94D',latin:'(mati)',ipa:'◌̈',nama:'Virama',contoh:'ꤰꥍ = k mati'},
+  {huruf:'ꥎ',unicode:'U+A94E',latin:'ea',ipa:'əa',nama:'Vokal EA',contoh:'ꤰꥎ = kea'},
+];
+const KAGANGA_ANGKA = [
+  {huruf:'꤀',unicode:'U+A900',latin:'0',nama:'Nol'},{huruf:'꤁',unicode:'U+A901',latin:'1',nama:'Satu'},
+  {huruf:'꤂',unicode:'U+A902',latin:'2',nama:'Dua'},{huruf:'꤃',unicode:'U+A903',latin:'3',nama:'Tiga'},
+  {huruf:'꤄',unicode:'U+A904',latin:'4',nama:'Empat'},{huruf:'꤅',unicode:'U+A905',latin:'5',nama:'Lima'},
+  {huruf:'꤆',unicode:'U+A906',latin:'6',nama:'Enam'},{huruf:'꤇',unicode:'U+A907',latin:'7',nama:'Tujuh'},
+  {huruf:'꤈',unicode:'U+A908',latin:'8',nama:'Delapan'},{huruf:'꤉',unicode:'U+A909',latin:'9',nama:'Sembilan'},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let katAktif = 'semua';
+let kuisMode = 'huruf';
+let skorBenar = 0, skorTotal = 0;
+let kuisSoal = null;
+const LABEL_KAT = {alam:'🌿 Alam',hewan:'🐾 Hewan',keluarga:'👨‍👩‍👧 Keluarga',tubuh:'🫀 Tubuh',makanan:'🍚 Makanan',angka:'🔢 Angka',kegiatan:'🏃 Kegiatan',sifat:'💫 Sifat',waktu:'⏰ Waktu',perasaan:'❤️ Perasaan',tempat:'🏘️ Tempat',arah:'🧭 Arah',kata_ganti:'🗣️ Kata Ganti',kata_tanya:'❓ Kata Tanya',ungkapan:'💬 Ungkapan',lain:'📌 Lain-lain',bangunan:'🏠 Bangunan'};
+
+// ============================================================
+// NAVIGASI
+// ============================================================
+function gantiTab(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('aktif'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('aktif'));
+  document.getElementById('tab-'+id).classList.add('aktif');
+  btn.classList.add('aktif');
+  if(id==='kuis')initKuis();
+  if(id==='kaganga')renderKaganga();
+  if(id==='konverter')renderPanduan();
+}
+
+// ============================================================
+// KAMUS
+// ============================================================
+function cariKata(){
   const q = document.getElementById('searchInput').value.toLowerCase().trim();
   const dialek = document.getElementById('dialekFilter').value;
 
   let hasil = KOSAKATA.filter(item => {
-    const cocokkategori = kategoriAktif === 'semua' || item.kategori === kategoriAktif;
-    if (!cocokkategori) return false;
-
-    if (!q) return true;
-
-    if (item.indonesia.toLowerCase().includes(q)) return true;
-
-    const dialekList = dialek === 'semua' ? Object.keys(item.dialek) : [dialek];
-    return dialekList.some(d => item.dialek[d] && item.dialek[d].kata.toLowerCase().includes(q));
+    if(katAktif !== 'semua' && item.kategori !== katAktif) return false;
+    if(!q) return true;
+    if(item.indonesia.toLowerCase().includes(q)) return true;
+    if(item.english.toLowerCase().includes(q)) return true;
+    const dList = dialek==='semua' ? ALL_DIALEK : [dialek];
+    return dList.some(d => item._dialek[d].kata.toLowerCase().includes(q));
   });
 
   document.getElementById('resultsCount').textContent = `${hasil.length} kata ditemukan`;
 
+  const dShow = dialek==='semua' ? ALL_DIALEK : [dialek];
   const grid = document.getElementById('wordGrid');
-  if (hasil.length === 0) {
-    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Kata tidak ditemukan. Coba kata lain atau ubah filter.</p></div>`;
+
+  if(!hasil.length){
+    grid.innerHTML=`<div class="empty-state"><div class="icon">🔍</div><p>Kata tidak ditemukan. Coba kata lain atau ubah filter.</p></div>`;
     return;
   }
 
-  const dialekToShow = dialek === 'semua'
-    ? ['lebong','rejang_lebong','kepahiang','bengkulu_utara','bengkulu_tengah']
-    : [dialek];
-
-  grid.innerHTML = hasil.map(item => `
+  grid.innerHTML = hasil.map(item=>`
     <div class="word-card">
-      <div class="word-indonesia">${item.indonesia}</div>
-      <span class="word-kategori">${labelKategori(item.kategori)}</span>
-      <div class="dialek-grid">
-        ${dialekToShow.map(d => item.dialek[d] ? `
-          <div class="dialek-item">
-            <div class="dialek-nama">${DIALEK_NAMA[d]}</div>
-            <div class="dialek-kata">${item.dialek[d].kata}</div>
-            <div class="dialek-kaganga">${item.dialek[d].kaganga}</div>
-            <div class="dialek-ipa">/${item.dialek[d].ipa}/</div>
-          </div>
-        ` : '').join('')}
+      <div class="word-header">
+        <div>
+          <div class="word-indonesia">${item.indonesia}</div>
+          <div class="word-english">🇬🇧 ${item.english}</div>
+        </div>
       </div>
-    </div>
-  `).join('');
+      <div class="word-badges">
+        <span class="word-kategori">${LABEL_KAT[item.kategori]||item.kategori}</span>
+      </div>
+      <div class="dialek-grid">
+        ${dShow.map(d=>`
+          <div class="dialek-item">
+            <div class="dialek-nama">${DNAME[d]}</div>
+            <div class="dialek-kata">${item._dialek[d].kata}</div>
+            <div class="dialek-kaganga">${item._dialek[d].kaganga||'—'}</div>
+            <div class="dialek-ipa">/${item._dialek[d].ipa}/</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
 }
 
-function labelKategori(k) {
-  const map = { alam:'🌿 Alam', keluarga:'👨‍👩‍👧 Keluarga', kegiatan:'🏃 Kegiatan',
-    angka:'🔢 Angka', sifat:'💫 Sifat', tubuh:'🫀 Tubuh',
-    kata_ganti:'🗣️ Kata Ganti', ungkapan:'💬 Ungkapan', bangunan:'🏠 Bangunan' };
-  return map[k] || k;
-}
-
-function filterKategori(kat, el) {
-  kategoriAktif = kat;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('aktif'));
+function filterKat(kat, el){
+  katAktif = kat;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('aktif'));
   el.classList.add('aktif');
   cariKata();
 }
 
 // ============================================================
-//  KAGANGA
+// KAGANGA RENDER
 // ============================================================
-function renderKaganga() {
-  if (document.getElementById('gridKonsonan').innerHTML) return;
-
-  document.getElementById('gridKonsonan').innerHTML = KAGANGA_KONSONAN.map(c => `
+function renderKaganga(){
+  if(document.getElementById('gridKonsonan').innerHTML) return;
+  document.getElementById('gridKonsonan').innerHTML = KAGANGA_KONSONAN.map(c=>`
     <div class="char-card">
       <span class="char-big">${c.huruf}</span>
       <div class="char-latin">${c.latin}</div>
       <div class="char-nama">${c.nama}</div>
       <div class="char-unicode">${c.unicode}</div>
-      <div class="char-contoh">
-        <div>Bunyi: <strong>/${c.ipa}/</strong></div>
-        <div style="margin-top:4px;font-family:'Noto Sans Rejang',serif;font-size:0.9rem">${c.contoh}</div>
-      </div>
-    </div>
-  `).join('');
-
-  document.getElementById('gridVokal').innerHTML = KAGANGA_VOKAL.map(v => `
+      <div class="char-contoh"><div>Bunyi: <strong>/${c.ipa}/</strong></div><div style="margin-top:4px;font-family:'Noto Sans Rejang',serif">${c.contoh}</div></div>
+    </div>`).join('');
+  document.getElementById('gridVokal').innerHTML = KAGANGA_VOKAL.map(v=>`
     <div class="char-card">
       <div class="char-big">ꤰ${v.huruf}</div>
       <div class="char-latin">${v.latin}</div>
       <div class="char-nama">${v.nama}</div>
       <div class="char-unicode">${v.unicode}</div>
-      <div class="char-contoh">
-        <div>Bunyi: <strong>/${v.ipa}/</strong></div>
-        <div style="margin-top:4px;font-family:'Noto Sans Rejang',serif;font-size:0.9rem">${v.contoh}</div>
-      </div>
-    </div>
-  `).join('');
-
-  document.getElementById('gridAngka').innerHTML = KAGANGA_ANGKA.map(a => `
+      <div class="char-contoh"><div>Bunyi: <strong>/${v.ipa}/</strong></div><div style="margin-top:4px;font-family:'Noto Sans Rejang',serif">${v.contoh}</div></div>
+    </div>`).join('');
+  document.getElementById('gridAngka').innerHTML = KAGANGA_ANGKA.map(a=>`
     <div class="char-card">
       <span class="char-big">${a.huruf}</span>
       <div class="char-latin">${a.latin}</div>
       <div class="char-nama">${a.nama}</div>
       <div class="char-unicode">${a.unicode}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 // ============================================================
-//  KONVERTER
+// KONVERTER
 // ============================================================
-const KONSONAN_MAP = {
-  'ngg': 'ꥃ', 'mb': 'ꥂ', 'nd': 'ꥄ', 'ny': 'ꤻ', 'ng': 'ꤲ',
-  'k': 'ꤰ', 'g': 'ꤱ', 't': 'ꤳ', 'd': 'ꤴ', 'n': 'ꤵ',
-  'p': 'ꤶ', 'b': 'ꤷ', 'm': 'ꤸ', 'c': 'ꤹ', 'j': 'ꤺ',
-  's': 'ꤼ', 'r': 'ꤽ', 'l': 'ꤾ', 'y': 'ꤿ', 'w': 'ꥀ', 'h': 'ꥁ'
-};
-
-const VOKAL_MAP = {
-  'ai': 'ꥊ', 'au': 'ꥌ', 'ea': 'ꥎ',
-  'i': 'ꥇ', 'u': 'ꥈ', 'e': 'ꥉ', 'o': 'ꥋ', 'a': ''
-};
-
-const KONSONAN_KEYS = Object.keys(KONSONAN_MAP).sort((a, b) => b.length - a.length);
-const VOKAL_KEYS = ['ai','au','ea','i','u','e','o','a'];
-const CARRIER = 'ꤰ';
-
-function toLatin2Kaganga(text) {
-  if (!text.trim()) return '';
-  let result = '';
-  let i = 0;
-  const t = text.toLowerCase();
-
-  while (i < t.length) {
-    const ch = t[i];
-
-    if (ch === ' ' || ch === '\n' || ch === '\r') {
-      result += ch; i++; continue;
-    }
-
-    if (ch === "'" || ch === '\'') {
-      result += 'ꤰ'; i++; continue;
-    }
-
-    // Try consonant
-    let konsonan = null, konsLen = 0;
-    for (const key of KONSONAN_KEYS) {
-      if (t.slice(i).startsWith(key)) {
-        konsonan = KONSONAN_MAP[key];
-        konsLen = key.length;
-        break;
-      }
-    }
-
-    if (konsonan) {
-      result += konsonan;
-      i += konsLen;
-      // Following vowel
-      let vokalDitemukan = false;
-      for (const vk of VOKAL_KEYS) {
-        if (t.slice(i).startsWith(vk)) {
-          result += VOKAL_MAP[vk];
-          i += vk.length;
-          vokalDitemukan = true;
-          break;
-        }
-      }
-      if (!vokalDitemukan) {
-        result += 'ꥍ'; // virama for dead consonant
-      }
-    } else {
-      // Try vowel with carrier
-      let vokalDitemukan = false;
-      for (const vk of VOKAL_KEYS) {
-        if (t.slice(i).startsWith(vk)) {
-          result += CARRIER + VOKAL_MAP[vk];
-          i += vk.length;
-          vokalDitemukan = true;
-          break;
-        }
-      }
-      if (!vokalDitemukan) {
-        result += ch; i++;
-      }
-    }
-  }
-  return result;
-}
-
-function konversiTeks() {
-  const input = document.getElementById('inputLatin').value;
-  const output = toLatin2Kaganga(input);
-  document.getElementById('outputKaganga').textContent = output || '—';
-}
-
-function konversiContoh(teks) {
-  document.getElementById('inputLatin').value = teks;
-  konversiTeks();
-}
-
-function salinKaganga() {
-  const teks = document.getElementById('outputKaganga').textContent;
-  if (teks && teks !== '—') {
-    navigator.clipboard.writeText(teks).then(() => alert('Teks Kaganga disalin!')).catch(() => {});
-  }
-}
-
-function renderPanduan() {
-  if (document.getElementById('panduanLatin').innerHTML) return;
-  const panduan = [
-    { latin: 'k, g, t, d, n, p, b, m, c, j, s, r, l, y, w, h', kaganga: 'ꤰꤱꤳꤴꤵꤶꤷꤸꤹꤺꤼꤽꤾꤿꥀꥁ', desc: 'Konsonan tunggal' },
-    { latin: 'ng', kaganga: 'ꤲ', desc: 'Bunyi "ng" seperti dalam "ngang"' },
-    { latin: 'ny', kaganga: 'ꤻ', desc: 'Bunyi "ny" seperti dalam "nyawa"' },
-    { latin: 'mb', kaganga: 'ꥂ', desc: 'Bunyi "mb" seperti dalam "mbak"' },
-    { latin: 'nd', kaganga: 'ꥄ', desc: 'Bunyi "nd"' },
-    { latin: 'ngg', kaganga: 'ꥃ', desc: 'Bunyi "ngg" seperti dalam "nggak"' },
-    { latin: 'a', kaganga: '(bawaan)', desc: 'Vokal "a" sudah ada di setiap konsonan, tidak perlu tulis tanda vokal' },
-    { latin: 'i', kaganga: 'ꥇ', desc: 'Tambahkan setelah konsonan: "ki" = ꤰꥇ' },
-    { latin: 'u', kaganga: 'ꥈ', desc: 'Tambahkan setelah konsonan: "ku" = ꤰꥈ' },
-    { latin: 'e', kaganga: 'ꥉ', desc: 'Tambahkan setelah konsonan: "ke" = ꤰꥉ' },
-    { latin: 'o', kaganga: 'ꥋ', desc: 'Tambahkan setelah konsonan: "ko" = ꤰꥋ' },
-    { latin: 'ai', kaganga: 'ꥊ', desc: 'Vokal diftong "ai": "kai" = ꤰꥊ' },
-    { latin: 'au', kaganga: 'ꥌ', desc: 'Vokal diftong "au": "kau" = ꤰꥌ' },
-    { latin: "' (apostrof)", kaganga: 'ꤰ', desc: 'Tanda hamzah/glotal stop menggunakan carrier ꤰ' },
+function konversiTeks(){ const v=document.getElementById('inputLatin').value; document.getElementById('outputKaganga').textContent=toKaganga(v)||'—'; }
+function konversiContoh(t){ document.getElementById('inputLatin').value=t; konversiTeks(); }
+function bersihkan(){ document.getElementById('inputLatin').value=''; document.getElementById('outputKaganga').textContent='—'; }
+function salinKaganga(){ const t=document.getElementById('outputKaganga').textContent; if(t&&t!=='—') navigator.clipboard.writeText(t).then(()=>alert('Teks Kaganga disalin!')); }
+function renderPanduan(){
+  if(document.getElementById('panduanLatin').innerHTML) return;
+  const p=[
+    {latin:'k g t d n p b m c j s r l y w h',kaganga:'ꤰꤱꤳꤴꤵꤶꤷꤸꤹꤺꤼꤽꤾꤿꥀꥁ',desc:'Konsonan tunggal'},
+    {latin:'ng',kaganga:'ꤲ',desc:'Bunyi "ng" seperti dalam "ngang"'},
+    {latin:'ny',kaganga:'ꤻ',desc:'Bunyi "ny" seperti dalam "nyawa"'},
+    {latin:'mb',kaganga:'ꥂ',desc:'Bunyi "mb"'},
+    {latin:'nd',kaganga:'ꥄ',desc:'Bunyi "nd"'},
+    {latin:'ngg',kaganga:'ꥃ',desc:'Bunyi "ngg"'},
+    {latin:'a (bawaan)',kaganga:'(inherent)',desc:'Vokal "a" sudah ada di setiap konsonan'},
+    {latin:'i',kaganga:'ꥇ',desc:'"ki" = ꤰꥇ (Ka + tanda I)'},
+    {latin:'u',kaganga:'ꥈ',desc:'"ku" = ꤰꥈ (Ka + tanda U)'},
+    {latin:'e',kaganga:'ꥉ',desc:'"ke" = ꤰꥉ (Ka + tanda E)'},
+    {latin:'o',kaganga:'ꥋ',desc:'"ko" = ꤰꥋ (Ka + tanda O)'},
+    {latin:'ai',kaganga:'ꥊ',desc:'Diftong ai: "kai" = ꤰꥊ'},
+    {latin:'au',kaganga:'ꥌ',desc:'Diftong au: "kau" = ꤰꥌ'},
+    {latin:"' (apostrof)",kaganga:'ꤰ',desc:'Glotal stop / hamzah menggunakan carrier'},
   ];
-
-  document.getElementById('panduanLatin').innerHTML = panduan.map(p => `
+  document.getElementById('panduanLatin').innerHTML = p.map(x=>`
     <div class="rule-item">
-      <div>
-        <div class="rule-latin">${p.latin}</div>
-        <div class="rule-kaganga">${p.kaganga}</div>
-      </div>
-      <div class="rule-desc">${p.desc}</div>
-    </div>
-  `).join('');
+      <div><div class="rule-latin">${x.latin}</div><div class="rule-kaganga">${x.kaganga}</div></div>
+      <div class="rule-desc">${x.desc}</div>
+    </div>`).join('');
 }
 
 // ============================================================
-//  KUIS
+// KUIS
 // ============================================================
-let kuisPool = [];
-let kuisIndex = 0;
-
-function setMode(mode) {
-  kuisMode = mode;
-  document.querySelectorAll('[id^="mode-"]').forEach(b => b.style.fontWeight = '');
-  document.getElementById('mode-' + mode).style.fontWeight = '700';
+function setMode(m){
+  kuisMode = m;
+  document.querySelectorAll('[id^="mode-"]').forEach(b=>{b.style.fontWeight='';b.style.borderColor='';});
+  const el = document.getElementById('mode-'+m);
+  if(el){el.style.fontWeight='700';el.style.borderColor='var(--coklat)';}
   resetKuis();
 }
-
-function resetKuis() {
-  skorBenar = 0; skorTotal = 0; kuisIndex = 0;
-  document.getElementById('skorBenar').textContent = '0';
-  document.getElementById('skorTotal').textContent = '0';
-  document.getElementById('skorPersen').textContent = '—';
-  document.getElementById('progressFill').style.width = '0%';
-  document.getElementById('feedbackMsg').textContent = '';
-  document.getElementById('feedbackMsg').className = 'feedback-msg';
+function resetKuis(){
+  skorBenar=0;skorTotal=0;
+  ['skorBenar','skorTotal'].forEach(id=>document.getElementById(id).textContent='0');
+  document.getElementById('skorPersen').textContent='—';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('feedbackMsg').textContent='';
+  document.getElementById('feedbackMsg').className='feedback-msg';
   buatSoal();
 }
+function initKuis(){ buatSoal(); }
+function acak(a){return[...a].sort(()=>Math.random()-.5);}
+function ambilAcak(a,n){return acak(a).slice(0,n);}
 
-function initKuis() {
-  if (kuisPool.length === 0) resetKuis();
-}
+function buatSoal(){
+  let pertanyaan, target, jawaban, pilihan;
+  document.getElementById('feedbackMsg').textContent='';
+  document.getElementById('feedbackMsg').className='feedback-msg';
 
-function acak(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-function ambilAcak(arr, n) { return acak(arr).slice(0, n); }
-
-function buatSoal() {
-  let soal, pertanyaan, target, pilihan, jawaban;
-
-  if (kuisMode === 'huruf') {
+  if(kuisMode==='huruf'){
     const pool = KAGANGA_KONSONAN;
-    const idx = Math.floor(Math.random() * pool.length);
-    soal = pool[idx];
+    const s = pool[Math.floor(Math.random()*pool.length)];
     pertanyaan = 'Apa bunyi huruf Kaganga ini?';
-    target = soal.huruf;
-    jawaban = soal.latin;
-    const salah = ambilAcak(pool.filter(x => x.latin !== soal.latin), 3).map(x => x.latin);
-    pilihan = acak([jawaban, ...salah]);
-    document.getElementById('kuisTarget').className = 'kuis-target';
+    target = s.huruf;
+    jawaban = s.latin;
+    const salah = ambilAcak(pool.filter(x=>x.latin!==s.latin),3).map(x=>x.latin);
+    pilihan = acak([jawaban,...salah]);
+    document.getElementById('kuisTarget').className='kuis-target';
     document.getElementById('kuisTarget').textContent = target;
-  } else {
-    const pool = KOSAKATA;
-    const idx = Math.floor(Math.random() * pool.length);
-    soal = pool[idx];
-    const dialekList = Object.keys(soal.dialek);
-    const dialek = dialekList[Math.floor(Math.random() * dialekList.length)];
-    pertanyaan = `Apa artinya kata ini? (Dialek: ${DIALEK_NAMA[dialek]})`;
-    target = soal.dialek[dialek].kata;
-    jawaban = soal.indonesia;
-    const salah = ambilAcak(pool.filter(x => x.indonesia !== soal.indonesia), 3).map(x => x.indonesia);
-    pilihan = acak([jawaban, ...salah]);
-    document.getElementById('kuisTarget').className = 'kuis-target kata';
+
+  } else if(kuisMode==='kata-id'){
+    const s = KOSAKATA[Math.floor(Math.random()*KOSAKATA.length)];
+    const d = ALL_DIALEK[Math.floor(Math.random()*ALL_DIALEK.length)];
+    pertanyaan = `Apa artinya kata ini? (Dialek: ${DNAME[d]})`;
+    target = s._dialek[d].kata;
+    jawaban = s.indonesia;
+    const salah = ambilAcak(KOSAKATA.filter(x=>x.indonesia!==s.indonesia),3).map(x=>x.indonesia);
+    pilihan = acak([jawaban,...salah]);
+    document.getElementById('kuisTarget').className='kuis-target kata';
+    document.getElementById('kuisTarget').textContent = target;
+
+  } else { // kata-en
+    const s = KOSAKATA[Math.floor(Math.random()*KOSAKATA.length)];
+    const d = ALL_DIALEK[Math.floor(Math.random()*ALL_DIALEK.length)];
+    pertanyaan = `What does this ${DNAME[d]} word mean?`;
+    target = s._dialek[d].kata;
+    jawaban = s.english;
+    const salah = ambilAcak(KOSAKATA.filter(x=>x.english!==s.english),3).map(x=>x.english);
+    pilihan = acak([jawaban,...salah]);
+    document.getElementById('kuisTarget').className='kuis-target kata';
     document.getElementById('kuisTarget').textContent = target;
   }
 
-  kuisSoalSaatIni = { jawaban };
+  kuisSoal = {jawaban};
   document.getElementById('kuisPertanyaan').textContent = pertanyaan;
-  document.getElementById('feedbackMsg').textContent = '';
-  document.getElementById('feedbackMsg').className = 'feedback-msg';
-
-  const pilEl = document.getElementById('kuisPilihan');
-  pilEl.innerHTML = pilihan.map(p => `
-    <button class="kuis-btn" onclick="jawab('${p.replace(/'/g, "\\'")}')">${p}</button>
-  `).join('');
+  document.getElementById('kuisPilihan').innerHTML = pilihan.map(p=>`
+    <button class="kuis-btn" onclick="jawab(${JSON.stringify(p)})">${p}</button>`).join('');
 }
 
-function jawab(pilihan) {
-  const benar = pilihan === kuisSoalSaatIni.jawaban;
-  skorTotal++;
-  if (benar) skorBenar++;
-
-  const persen = Math.round((skorBenar / skorTotal) * 100);
+function jawab(pilihan){
+  const benar = pilihan === kuisSoal.jawaban;
+  skorTotal++; if(benar) skorBenar++;
+  const persen = Math.round((skorBenar/skorTotal)*100);
   document.getElementById('skorBenar').textContent = skorBenar;
   document.getElementById('skorTotal').textContent = skorTotal;
-  document.getElementById('skorPersen').textContent = persen + '%';
-  document.getElementById('progressFill').style.width = Math.min(skorTotal * 5, 100) + '%';
-
-  const allBtn = document.querySelectorAll('.kuis-btn');
-  allBtn.forEach(b => {
-    b.disabled = true;
-    if (b.textContent === kuisSoalSaatIni.jawaban) b.classList.add('benar');
-    else if (b.textContent === pilihan && !benar) b.classList.add('salah');
+  document.getElementById('skorPersen').textContent = persen+'%';
+  document.getElementById('progressFill').style.width = Math.min(skorTotal*4,100)+'%';
+  document.querySelectorAll('.kuis-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===kuisSoal.jawaban) b.classList.add('benar');
+    else if(b.textContent===pilihan&&!benar) b.classList.add('salah');
   });
-
   const fb = document.getElementById('feedbackMsg');
-  if (benar) {
-    fb.textContent = '✅ Benar! Bagus sekali!';
-    fb.className = 'feedback-msg benar';
-  } else {
-    fb.textContent = `❌ Salah. Jawaban yang benar: ${kuisSoalSaatIni.jawaban}`;
-    fb.className = 'feedback-msg salah';
-  }
-
-  setTimeout(buatSoal, 1600);
+  if(benar){fb.textContent='✅ Benar! Bagus sekali!';fb.className='feedback-msg benar';}
+  else{fb.textContent=`❌ Salah. Jawaban: ${kuisSoal.jawaban}`;fb.className='feedback-msg salah';}
+  setTimeout(buatSoal,1700);
 }
 
-// ============================================================
-//  INIT
-// ============================================================
+// INIT
 cariKata();
 renderPanduan();
+setMode('huruf');
 </script>
 </body>
 </html>
