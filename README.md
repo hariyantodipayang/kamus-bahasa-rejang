@@ -123,6 +123,37 @@ Bebas digunakan, dimodifikasi, dan didistribusikan — dengan menyebut sumber.
 
 ---
 
+## 👨‍💻 Developer
+
+<table>
+<tr>
+<td align="center" width="160">
+<img src="https://cdn.lynkid.my.id/profile/01-05-2026/1777639293606_8868403.webp" width="100" style="border-radius:50%"><br>
+<strong>Hariyanto, S.Sos</strong><br>
+<em>ASN Kepahiang · Developer · Crypto Creator · YouTuber</em>
+</td>
+<td>
+
+*"Mengabdi dengan ilmu, bertumbuh lewat inovasi."*
+
+Seorang Aparatur Sipil Negara Kabupaten Kepahiang yang percaya bahwa tugas negara dan semangat berinovasi bisa berjalan beriringan. Membangun proyek open source ini sebagai bentuk pelestarian budaya digital Bengkulu.
+
+🏛️ **ASN** — Badan Keuangan Daerah Kabupaten Kepahiang  
+💻 **Developer** — Aplikasi web, sistem informasi, AppSheet  
+₿ **Crypto Creator** — Edukasi kripto & analisis pasar  
+🎬 **YouTuber** — [@ardion_news](https://www.youtube.com/@ardion_news)
+
+**Proyek lain:**
+[DIPAYANG](https://dipayang.idcrypt.xyz) · [IDCrypt](https://idcrypt.xyz) · [Kasir Kita](https://hariyantodipayang.github.io/kasir-kita/) · [SIPANDAI](https://kphinside.github.io/sipandai-app/)
+
+🌐 [dipayang.idcrypt.xyz/profil](https://dipayang.idcrypt.xyz/profil) · 💬 [WhatsApp](https://wa.me/6285609326414)
+
+</td>
+</tr>
+</table>
+
+---
+
 ## 🙏 Penghargaan
 
 Terima kasih kepada seluruh penutur Bahasa Rejang yang telah menjaga warisan leluhur ini tetap hidup.  
@@ -132,5 +163,6 @@ Terima kasih kepada seluruh penutur Bahasa Rejang yang telah menjaga warisan lel
 
 <p align="center">
 Dibuat dengan ❤️ untuk melestarikan warisan budaya Bengkulu<br>
-<em>ꤰꤱꤲ · ꤳꤴꤵ · ꤶꤷꤸ</em>
+<em>ꤰꤱꤲ · ꤳꤴꤵ · ꤶꤷꤸ</em><br><br>
+<a href="https://dipayang.idcrypt.xyz/profil">👨‍💻 Hariyanto, S.Sos</a> · <a href="https://github.com/hariyantodipayang/kamus-bahasa-rejang">⭐ GitHub</a> · <a href="https://wa.me/6285609326414">💬 WhatsApp</a>
 </p>
