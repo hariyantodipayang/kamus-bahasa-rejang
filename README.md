@@ -2,7 +2,7 @@
 
 Aplikasi web open source untuk belajar dan melestarikan **Bahasa Rejang** dari Bengkulu — lengkap dengan **5 dialek** dan **aksara Kaganga** interaktif.
 
-🌐 **Demo langsung:** [buka `index.html` di browser] | [GitHub Pages - segera hadir]
+🌐 **Demo langsung:** https://hariyantodipayang.github.io/kamus-bahasa-rejang/
 
 ---
 
