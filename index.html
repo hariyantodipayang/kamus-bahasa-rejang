@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kamus Bahasa Rejang & Aksara Kaganga</title>
-<meta name="description" content="Kamus digital Bahasa Rejang — 250+ kata, 5 dialek, aksara Kaganga, terjemahan Inggris.">
+<meta name="description" content="Kamus digital Bahasa Rejang — 1.500+ kata, 5 dialek, aksara Kaganga, data BERENDO resmi Kemendikdasmen.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Rejang&family=Poppins:wght@300;400;500;600;700&display=swap');
 :root{--coklat-tua:#3D1A00;--coklat:#7B3F00;--emas:#C8922A;--emas-muda:#F0C060;--krem:#FDF6E3;--putih:#FFF;--abu:#6B7280;--abu-muda:#F3F4F6;--merah:#DC2626;--hijau:#16A34A;}
@@ -295,7 +295,11 @@ footer a:hover{text-decoration:underline;}
 
   <div class="kaganga-section">
     <div class="subsection-title">🌿 Tentang Proyek</div>
-    <p style="font-size:.86rem;line-height:1.8;color:#444;margin-bottom:14px;">Kamus Bahasa Rejang & Aksara Kaganga adalah proyek <strong>open source</strong> untuk melestarikan Bahasa Rejang — bahasa daerah Bengkulu yang kaya. Tersedia dalam <strong>250+ kata</strong>, <strong>5 dialek</strong>, dan <strong>3 bahasa</strong> (Indonesia, Inggris, Rejang).</p>
+    <p style="font-size:.86rem;line-height:1.8;color:#444;margin-bottom:14px;">Kamus Bahasa Rejang & Aksara Kaganga adalah proyek <strong>open source</strong> untuk melestarikan Bahasa Rejang — bahasa daerah Bengkulu yang kaya. Tersedia dalam <strong>1.500+ kata</strong>, <strong>5 dialek</strong>, dan <strong>3 bahasa</strong> (Indonesia, Inggris, Rejang).</p>
+    <div style="background:linear-gradient(135deg,#003580,#0057b8);color:#fff;border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:.82rem;line-height:1.7;">
+      <div style="font-weight:700;font-size:.9rem;margin-bottom:6px;">📚 Terintegrasi dengan BERENDO</div>
+      <div>Kamus ini menyertakan <strong>1.284 kata</strong> dari <a href="https://berendo.kemendikdasmen.go.id" target="_blank" style="color:#a8d4ff">BERENDO</a> — platform kamus resmi Kemendikdasmen RI yang dikurasi oleh Balai Bahasa Bengkulu. Entri BERENDO ditandai badge <span style="background:rgba(255,255,255,.25);border-radius:4px;padding:1px 6px;font-size:.72rem;font-weight:700;">📚 BERENDO</span> pada setiap kartu kata.</div>
+    </div>
     <div style="background:var(--krem);border-radius:12px;padding:14px;margin-bottom:14px;">
       <div style="font-weight:600;color:var(--coklat);margin-bottom:8px;">📍 Lima Dialek:</div>
       <ul style="font-size:.83rem;line-height:2;padding-left:18px;color:#444;">
@@ -331,11 +335,20 @@ footer a:hover{text-decoration:underline;}
   <div class="kaganga-section">
     <div class="subsection-title">🛠️ Struktur File</div>
     <pre style="background:var(--coklat-tua);color:var(--emas-muda);padding:14px;border-radius:10px;font-size:.76rem;line-height:1.8;overflow-x:auto;">
-bahasa-rejang/
-├── index.html          ← Aplikasi utama
+kamus-bahasa-rejang/
+├── index.html                 ← Aplikasi web utama (buka langsung)
 ├── data/
-│   ├── kosakata.json   ← 250+ kata, 5 dialek, 3 bahasa
-│   └── kaganga.json    ← Data huruf Kaganga
+│   ├── kosakata.json          ← ~320 kata kurasi, 5 dialek
+│   ├── kosakata-berendo.json  ← 1.284 kata dari BERENDO resmi
+│   └── kaganga.json           ← Data lengkap aksara Kaganga
+├── locale/
+│   ├── rej.json               ← Locale Rejang (Latin) untuk developer
+│   ├── rej-Rjng.json          ← Locale Rejang (Kaganga)
+│   ├── id.json                ← Locale Indonesia
+│   ├── en.json                ← Locale English
+│   └── README.md              ← Panduan integrasi i18n
+├── berendo-extractor.js       ← Skrip ekstrak data BERENDO
+├── package.json               ← Metadata npm
 ├── README.md
 └── LICENSE</pre>
   </div>
@@ -356,6 +369,7 @@ bahasa-rejang/
 // ============================================================
 const KONS = {'ngg':'ꥃ','mb':'ꥂ','nd':'ꥄ','ny':'ꤻ','ng':'ꤲ','k':'ꤰ','g':'ꤱ','t':'ꤳ','d':'ꤴ','n':'ꤵ','p':'ꤶ','b':'ꤷ','m':'ꤸ','c':'ꤹ','j':'ꤺ','s':'ꤼ','r':'ꤽ','l':'ꤾ','y':'ꤿ','w':'ꥀ','h':'ꥁ'};
 const VOK = {'ai':'ꥊ','au':'ꥌ','ea':'ꥎ','i':'ꥇ','u':'ꥈ','e':'ꥉ','o':'ꥋ','a':''};
+const DIGIT = {'0':'꤀','1':'꤁','2':'꤂','3':'꤃','4':'꤄','5':'꤅','6':'꤆','7':'꤇','8':'꤈','9':'꤉'};
 const KKEYS = Object.keys(KONS).sort((a,b)=>b.length-a.length);
 const VKEYS = ['ai','au','ea','i','u','e','o','a'];
 const CR = 'ꤰ';
@@ -366,6 +380,7 @@ function toKaganga(text){
     const ch=t[i];
     if(ch===' '||ch==='\n'||ch==='\r'){r+=ch;i++;continue;}
     if(ch==="'"||ch==='`'){r+=CR;i++;continue;}
+    if(DIGIT[ch]){r+=DIGIT[ch];i++;continue;}
     let k=null,kl=0;
     for(const key of KKEYS){if(t.slice(i).startsWith(key)){k=KONS[key];kl=key.length;break;}}
     if(k){
@@ -2224,6 +2239,8 @@ function renderPanduan(){
     {latin:'ai',kaganga:'ꥊ',desc:'Diftong ai: "kai" = ꤰꥊ'},
     {latin:'au',kaganga:'ꥌ',desc:'Diftong au: "kau" = ꤰꥌ'},
     {latin:"' (apostrof)",kaganga:'ꤰ',desc:'Glotal stop / hamzah menggunakan carrier'},
+    {latin:'0 1 2 3 4 5 6 7 8 9',kaganga:'꤀ ꤁ ꤂ ꤃ ꤄ ꤅ ꤆ ꤇ ꤈ ꤉',desc:'Angka Arab otomatis dikonversi ke angka Rejang'},
+    {latin:'f, q, v, x, z',kaganga:'(tidak ada)',desc:'Bunyi ini tidak ada dalam Bahasa Rejang — tidak memiliki aksara Kaganga. Karakter ini akan muncul apa adanya.'},
   ];
   document.getElementById('panduanLatin').innerHTML = p.map(x=>`
     <div class="rule-item">
@@ -2272,23 +2289,31 @@ function buatSoal(){
     document.getElementById('kuisTarget').textContent = target;
 
   } else if(kuisMode==='kata-id'){
-    const s = KOSAKATA[Math.floor(Math.random()*KOSAKATA.length)];
+    // Hanya entri dengan indonesia pendek dan tidak kosong (max 35 karakter)
+    const pool_id = KOSAKATA.filter(x=>x.indonesia && x.indonesia.length<=35);
+    if(pool_id.length<4){buatSoal();return;}
+    const s = pool_id[Math.floor(Math.random()*pool_id.length)];
     const d = ALL_DIALEK[Math.floor(Math.random()*ALL_DIALEK.length)];
-    pertanyaan = `Apa artinya kata ini? (Dialek: ${DNAME[d]})`;
+    pertanyaan = `Apa artinya kata Rejang ini? (Dialek: ${DNAME[d]})`;
     target = s._dialek[d].kata;
     jawaban = s.indonesia;
-    const salah = ambilAcak(KOSAKATA.filter(x=>x.indonesia!==s.indonesia),3).map(x=>x.indonesia);
+    const salah = ambilAcak(pool_id.filter(x=>x.indonesia!==s.indonesia),3).map(x=>x.indonesia);
+    if(salah.length<3){buatSoal();return;}
     pilihan = acak([jawaban,...salah]);
     document.getElementById('kuisTarget').className='kuis-target kata';
     document.getElementById('kuisTarget').textContent = target;
 
   } else { // kata-en
-    const s = KOSAKATA[Math.floor(Math.random()*KOSAKATA.length)];
+    // Hanya entri yang punya terjemahan Inggris
+    const pool_en = KOSAKATA.filter(x=>x.english && x.english.trim()!=='');
+    if(pool_en.length<4){buatSoal();return;}
+    const s = pool_en[Math.floor(Math.random()*pool_en.length)];
     const d = ALL_DIALEK[Math.floor(Math.random()*ALL_DIALEK.length)];
-    pertanyaan = `What does this ${DNAME[d]} word mean?`;
+    pertanyaan = `What does this ${DNAME[d]} Rejang word mean?`;
     target = s._dialek[d].kata;
     jawaban = s.english;
-    const salah = ambilAcak(KOSAKATA.filter(x=>x.english!==s.english),3).map(x=>x.english);
+    const salah = ambilAcak(pool_en.filter(x=>x.english!==s.english),3).map(x=>x.english);
+    if(salah.length<3){buatSoal();return;}
     pilihan = acak([jawaban,...salah]);
     document.getElementById('kuisTarget').className='kuis-target kata';
     document.getElementById('kuisTarget').textContent = target;
