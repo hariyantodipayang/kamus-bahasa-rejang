@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kamus Bahasa Rejang & Aksara Kaganga</title>
+<meta name="description" content="Kamus digital Bahasa Rejang dengan 5 dialek (Lebong, Rejang Lebong, Kepahiang, Bengkulu Utara, Bengkulu Tengah) dan aksara Kaganga interaktif.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Rejang&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --coklat-tua: #3D1A00;
+    --coklat: #7B3F00;
+    --emas: #C8922A;
+    --emas-muda: #F0C060;
+    --krem: #FDF6E3;
+    --putih: #FFFFFF;
+    --abu: #6B7280;
+    --abu-muda: #F3F4F6;
+    --merah: #DC2626;
+    --hijau: #16A34A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--krem);
+    color: var(--coklat-tua);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--coklat-tua) 0%, var(--coklat) 60%, #5a2d00 100%);
+    color: var(--emas-muda);
+    padding: 20px 24px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(61,26,0,0.4);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    font-size: 2.4rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    flex-shrink: 0;
+  }
+
+  .header-title h1 {
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--emas-muda);
+  }
+
+  .header-title p {
+    font-size: 0.78rem;
+    opacity: 0.8;
+    margin-top: 2px;
+    color: #e8d5a0;
+  }
+
+  .kaganga-display {
+    font-family: 'Noto Sans Rejang', serif;
+    font-size: 1.6rem;
+    letter-spacing: 4px;
+    color: var(--emas);
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+
+  nav button {
+    background: transparent;
+    border: none;
+    color: rgba(240,192,96,0.6);
+    padding: 10px 16px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  nav button:hover {
+    color: var(--emas-muda);
+    background: rgba(255,255,255,0.05);
+  }
+
+  nav button.aktif {
+    color: var(--emas-muda);
+    border-bottom-color: var(--emas);
+    background: rgba(200,146,42,0.1);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.aktif { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--coklat);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* SEARCH BOX */
+  .search-area {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
+    margin-bottom: 20px;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 200px;
+    border: 2px solid #e5d5bc;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--krem);
+    color: var(--coklat-tua);
+  }
+
+  .search-input:focus {
+    border-color: var(--emas);
+    background: white;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--abu);
+  }
+
+  select {
+    border: 2px solid #e5d5bc;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    background: var(--krem);
+    color: var(--coklat-tua);
+    outline: none;
+    cursor: pointer;
+  }
+
+  select:focus { border-color: var(--emas); }
+
+  .chip-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 2px solid #e5d5bc;
+    background: white;
+    color: var(--abu);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .chip:hover, .chip.aktif {
+    background: var(--emas);
+    border-color: var(--emas);
+    color: white;
+  }
+
+  /* WORD CARDS */
+  .results-count {
+    font-size: 0.8rem;
+    color: var(--abu);
+    margin-bottom: 12px;
+  }
+
+  .word-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .word-card {
+    background: white;
+    border-radius: 14px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(61,26,0,0.06);
+    border-left: 4px solid var(--emas);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .word-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(61,26,0,0.12);
+  }
+
+  .word-indonesia {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--coklat-tua);
+    margin-bottom: 4px;
+  }
+
+  .word-kategori {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: var(--emas-muda);
+    color: var(--coklat);
+    border-radius: 10px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .dialek-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+
+  .dialek-item {
+    background: var(--krem);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .dialek-nama {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--abu);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .dialek-kata {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--coklat);
+  }
+
+  .dialek-kaganga {
+    font-family: 'Noto Sans Rejang', serif;
+    font-size: 1.2rem;
+    color: var(--emas);
+    margin-top: 2px;
+    line-height: 1.8;
+  }
+
+  .dialek-ipa {
+    font-size: 0.72rem;
+    color: var(--abu);
+    font-style: italic;
+  }
+
+  /* KAGANGA TABLE */
+  .kaganga-section {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
+    margin-bottom: 20px;
+  }
+
+  .subsection-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--coklat);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--emas-muda);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .char-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .char-card {
+    background: var(--krem);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 2px solid transparent;
+    position: relative;
+  }
+
+  .char-card:hover {
+    background: var(--emas-muda);
+    border-color: var(--emas);
+    transform: translateY(-2px);
+  }
+
+  .char-big {
+    font-family: 'Noto Sans Rejang', serif;
+    font-size: 2.5rem;
+    color: var(--coklat-tua);
+    line-height: 1.4;
+    display: block;
+  }
+
+  .char-latin {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--coklat);
+    margin-top: 4px;
+  }
+
+  .char-nama {
+    font-size: 0.7rem;
+    color: var(--abu);
+    margin-top: 2px;
+  }
+
+  .char-unicode {
+    font-size: 0.65rem;
+    color: #aaa;
+    margin-top: 2px;
+    font-family: monospace;
+  }
+
+  /* INFO PANEL */
+  .info-banner {
+    background: linear-gradient(135deg, var(--coklat-tua), var(--coklat));
+    color: var(--emas-muda);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+
+  .info-banner h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .info-banner p {
+    font-size: 0.82rem;
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+
+  /* CONVERTER */
+  .converter-box {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
+    margin-bottom: 20px;
+  }
+
+  .converter-cols {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  @media (max-width: 500px) {
+    .converter-cols {
+      grid-template-columns: 1fr;
+    }
+    .arrow-col { display: none; }
+  }
+
+  .converter-textarea {
+    width: 100%;
+    height: 140px;
+    border: 2px solid #e5d5bc;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    resize: vertical;
+    outline: none;
+    background: var(--krem);
+    transition: border-color 0.2s;
+  }
+
+  .converter-textarea:focus { border-color: var(--emas); background: white; }
+
+  .converter-output {
+    font-family: 'Noto Sans Rejang', serif;
+    font-size: 1.6rem;
+    line-height: 2;
+    color: var(--coklat-tua);
+    background: var(--krem);
+    border: 2px solid #e5d5bc;
+    border-radius: 12px;
+    padding: 12px 14px;
+    min-height: 140px;
+    word-break: break-all;
+  }
+
+  .arrow-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 50px;
+    font-size: 1.5rem;
+    color: var(--emas);
+  }
+
+  .converter-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--abu);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--emas);
+    color: white;
+  }
+
+  .btn-primary:hover { background: var(--coklat); }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--emas);
+    color: var(--coklat);
+  }
+
+  .btn-outline:hover { background: var(--emas-muda); }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* PANDUAN PENULISAN */
+  .rule-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .rule-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    background: var(--krem);
+    border-radius: 10px;
+    padding: 10px 14px;
+    align-items: center;
+  }
+
+  .rule-latin {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--coklat);
+    font-family: monospace;
+  }
+
+  .rule-kaganga {
+    font-family: 'Noto Sans Rejang', serif;
+    font-size: 1.4rem;
+    color: var(--emas);
+    margin-right: 10px;
+  }
+
+  .rule-desc {
+    font-size: 0.82rem;
+    color: var(--abu);
+  }
+
+  /* KUIS */
+  .kuis-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(61,26,0,0.08);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .kuis-pertanyaan {
+    font-size: 1rem;
+    color: var(--abu);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .kuis-target {
+    font-family: 'Noto Sans Rejang', serif;
+    font-size: 4rem;
+    color: var(--coklat-tua);
+    margin: 16px 0;
+    line-height: 1.4;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .kuis-target.kata {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.2rem;
+  }
+
+  .kuis-pilihan {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 480px;
+    margin: 20px auto 0;
+  }
+
+  .kuis-btn {
+    padding: 14px 10px;
+    border-radius: 12px;
+    border: 2px solid #e5d5bc;
+    background: var(--krem);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--coklat-tua);
+  }
+
+  .kuis-btn:hover:not(:disabled) {
+    border-color: var(--emas);
+    background: var(--emas-muda);
+  }
+
+  .kuis-btn.benar {
+    background: #dcfce7;
+    border-color: var(--hijau);
+    color: #166534;
+  }
+
+  .kuis-btn.salah {
+    background: #fee2e2;
+    border-color: var(--merah);
+    color: #991b1b;
+  }
+
+  .kuis-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+
+  .skor-panel {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .skor-item {
+    text-align: center;
+    background: var(--krem);
+    border-radius: 12px;
+    padding: 10px 20px;
+  }
+
+  .skor-angka {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--coklat);
+  }
+
+  .skor-label {
+    font-size: 0.7rem;
+    color: var(--abu);
+    text-transform: uppercase;
+  }
+
+  .feedback-msg {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 12px;
+    min-height: 28px;
+    transition: all 0.2s;
+  }
+
+  .feedback-msg.benar { color: var(--hijau); }
+  .feedback-msg.salah { color: var(--merah); }
+
+  .kuis-mode-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--abu);
+    font-size: 0.78rem;
+    border-top: 1px solid #e5d5bc;
+    margin-top: 20px;
+  }
+
+  footer a {
+    color: var(--emas);
+    text-decoration: none;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--abu);
+  }
+
+  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 0.9rem; }
+
+  .badge-dialek {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: var(--coklat);
+    color: white;
+    margin-left: 6px;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: #e5d5bc;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--emas);
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+
+  /* TOOLTIP */
+  .char-card:hover .char-contoh {
+    display: block;
+  }
+
+  .char-contoh {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--coklat-tua);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    z-index: 10;
+    line-height: 1.5;
+    min-width: 150px;
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .char-contoh::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--coklat-tua);
+  }
+
+  .vokal-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.4rem;
+  }
+
+  .vokal-before {
+    font-family: 'Noto Sans Rejang', serif;
+    color: var(--abu);
+  }
+
+  .vokal-mark {
+    font-family: 'Noto Sans Rejang', serif;
+    color: var(--emas);
+    font-size: 1.2rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">📖</div>
+    <div class="header-title">
+      <h1>Kamus Bahasa Rejang & Aksara Kaganga</h1>
+      <p>Lebong · Rejang Lebong · Kepahiang · Bengkulu Utara · Bengkulu Tengah</p>
+      <div class="kaganga-display">ꤰꤱꤲꤳꤴꤵ</div>
+    </div>
+  </div>
+  <nav>
+    <button class="aktif" onclick="gantiTab('kamus', this)">📚 Kamus</button>
+    <button onclick="gantiTab('kaganga', this)">🔤 Huruf Kaganga</button>
+    <button onclick="gantiTab('konverter', this)">🔄 Konverter</button>
+    <button onclick="gantiTab('kuis', this)">🎯 Kuis</button>
+    <button onclick="gantiTab('tentang', this)">ℹ️ Tentang</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ===== TAB KAMUS ===== -->
+  <div id="tab-kamus" class="tab-panel aktif">
+    <div class="search-area">
+      <div class="search-row">
+        <input type="text" class="search-input" id="searchInput"
+          placeholder="Cari kata dalam Bahasa Indonesia atau Rejang..."
+          oninput="cariKata()" autofocus>
+        <select id="dialekFilter" onchange="cariKata()">
+          <option value="semua">Semua Dialek</option>
+          <option value="lebong">Lebong</option>
+          <option value="rejang_lebong">Rejang Lebong</option>
+          <option value="kepahiang">Kepahiang</option>
+          <option value="bengkulu_utara">Bengkulu Utara</option>
+          <option value="bengkulu_tengah">Bengkulu Tengah</option>
+        </select>
+      </div>
+      <div class="filter-label">Kategori:</div>
+      <div class="chip-group" id="chipKategori">
+        <div class="chip aktif" onclick="filterKategori('semua', this)">Semua</div>
+        <div class="chip" onclick="filterKategori('angka', this)">Angka</div>
+        <div class="chip" onclick="filterKategori('keluarga', this)">Keluarga</div>
+        <div class="chip" onclick="filterKategori('kegiatan', this)">Kegiatan</div>
+        <div class="chip" onclick="filterKategori('alam', this)">Alam</div>
+        <div class="chip" onclick="filterKategori('sifat', this)">Sifat</div>
+        <div class="chip" onclick="filterKategori('tubuh', this)">Tubuh</div>
+        <div class="chip" onclick="filterKategori('kata_ganti', this)">Kata Ganti</div>
+        <div class="chip" onclick="filterKategori('ungkapan', this)">Ungkapan</div>
+      </div>
+    </div>
+
+    <div class="results-count" id="resultsCount"></div>
+    <div class="word-grid" id="wordGrid"></div>
+  </div>
+
+  <!-- ===== TAB KAGANGA ===== -->
+  <div id="tab-kaganga" class="tab-panel">
+    <div class="info-banner">
+      <h3>🏛️ Aksara Kaganga — Warisan Leluhur Rejang</h3>
+      <p>Aksara Kaganga adalah sistem tulisan tradisional masyarakat Rejang, Bengkulu. Termasuk dalam kelompok aksara Abugida — setiap huruf konsonan mengandung bunyi vokal 'a' bawaan. Terdaftar dalam standar Unicode blok U+A930–U+A95F sejak tahun 2009.</p>
+    </div>
+
+    <div class="kaganga-section">
+      <div class="subsection-title">🔤 Konsonan (23 huruf)</div>
+      <div class="char-grid" id="gridKonsonan"></div>
+
+      <div class="subsection-title">🔵 Tanda Vokal (Diakritik)</div>
+      <p style="font-size:0.82rem;color:var(--abu);margin-bottom:14px;">Vokal selain 'a' dituliskan sebagai tanda yang diletakkan di atas atau bawah konsonan. Vokal 'a' adalah vokal bawaan dan tidak memerlukan tanda.</p>
+      <div class="char-grid" id="gridVokal"></div>
+
+      <div class="subsection-title">🔢 Angka Rejang</div>
+      <div class="char-grid" id="gridAngka"></div>
+    </div>
+
+    <div class="kaganga-section">
+      <div class="subsection-title">📌 Cara Membaca & Menulis</div>
+      <div class="rule-list">
+        <div class="rule-item">
+          <div>
+            <div class="rule-latin">Arah</div>
+          </div>
+          <div class="rule-desc">Ditulis dari kiri ke kanan, seperti tulisan Latin.</div>
+        </div>
+        <div class="rule-item">
+          <div>
+            <div class="rule-latin">Vokal 'a'</div>
+          </div>
+          <div class="rule-desc">Sudah terkandung dalam setiap konsonan. "Ka" = <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꤰ</span>, bukan ditambah tanda vokal lagi.</div>
+        </div>
+        <div class="rule-item">
+          <div>
+            <div class="rule-latin">Vokal lain</div>
+          </div>
+          <div class="rule-desc">Ditambahkan sebagai diakritik setelah konsonan. "Ki" = <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꤰꥇ</span></div>
+        </div>
+        <div class="rule-item">
+          <div>
+            <div class="rule-latin">Konsonan mati</div>
+          </div>
+          <div class="rule-desc">Ditandai dengan virama <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꥍ</span>. Contoh: "pak" = <span style="font-family:'Noto Sans Rejang',serif;font-size:1.2rem;color:var(--emas)">ꤶꤰꥍ</span></div>
+        </div>
+        <div class="rule-item">
+          <div>
+            <div class="rule-latin">Font</div>
+          </div>
+          <div class="rule-desc">Gunakan font "Noto Sans Rejang" (Google Fonts) untuk tampilan terbaik di perangkat digital.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB KONVERTER ===== -->
+  <div id="tab-konverter" class="tab-panel">
+    <div class="info-banner">
+      <h3>🔄 Konverter Latin → Kaganga</h3>
+      <p>Ketik teks Bahasa Rejang dalam ejaan Latin, dan lihat konversinya ke aksara Kaganga secara otomatis. Konverter ini menggunakan pemetaan fonetik dasar — cocok untuk belajar dan eksplorasi.</p>
+    </div>
+
+    <div class="converter-box">
+      <div class="converter-cols">
+        <div>
+          <div class="converter-label">Teks Latin (Ejaan Rejang)</div>
+          <textarea class="converter-textarea" id="inputLatin"
+            placeholder="Contoh: wai, uku, telo, lemak..."
+            oninput="konversiTeks()"></textarea>
+        </div>
+        <div class="arrow-col">→</div>
+        <div>
+          <div class="converter-label">Aksara Kaganga</div>
+          <div class="converter-output" id="outputKaganga">—</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="konversiContoh('wai duei telo')">Contoh: Angka</button>
+        <button class="btn btn-primary" onclick="konversiContoh('uku lop umeak')">Contoh: Kalimat</button>
+        <button class="btn btn-outline" onclick="document.getElementById('inputLatin').value='';document.getElementById('outputKaganga').textContent='—'">Bersihkan</button>
+        <button class="btn btn-outline" onclick="salinKaganga()">📋 Salin</button>
+      </div>
+    </div>
+
+    <div class="kaganga-section">
+      <div class="subsection-title">📖 Panduan Penulisan Latin</div>
+      <p style="font-size:0.82rem;color:var(--abu);margin-bottom:14px;">Gunakan kode berikut saat mengetik agar konverter bekerja dengan benar:</p>
+      <div class="rule-list" id="panduanLatin"></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB KUIS ===== -->
+  <div id="tab-kuis" class="tab-panel">
+    <div class="kuis-mode-row">
+      <button class="btn btn-outline aktif-mode" id="mode-huruf" onclick="setMode('huruf')">🔤 Tebak Huruf</button>
+      <button class="btn btn-outline" id="mode-kata" onclick="setMode('kata')">📝 Tebak Kata</button>
+    </div>
+
+    <div class="skor-panel">
+      <div class="skor-item">
+        <div class="skor-angka" id="skorBenar">0</div>
+        <div class="skor-label">Benar</div>
+      </div>
+      <div class="skor-item">
+        <div class="skor-angka" id="skorTotal">0</div>
+        <div class="skor-label">Total</div>
+      </div>
+      <div class="skor-item">
+        <div class="skor-angka" id="skorPersen">—</div>
+        <div class="skor-label">Akurasi</div>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <div class="kuis-card">
+      <div class="kuis-pertanyaan" id="kuisPertanyaan">Apa nama huruf Kaganga ini?</div>
+      <div class="kuis-target" id="kuisTarget">ꤰ</div>
+      <div class="kuis-pilihan" id="kuisPilihan"></div>
+      <div class="feedback-msg" id="feedbackMsg"></div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="btn btn-outline" onclick="resetKuis()">🔄 Mulai Ulang</button>
+    </div>
+  </div>
+
+  <!-- ===== TAB TENTANG ===== -->
+  <div id="tab-tentang" class="tab-panel">
+    <div class="kaganga-section">
+      <div class="subsection-title">🌿 Tentang Proyek Ini</div>
+      <p style="font-size:0.88rem;line-height:1.8;color:#444;margin-bottom:14px;">
+        Kamus Bahasa Rejang & Aksara Kaganga adalah proyek <strong>open source</strong> yang bertujuan melestarikan dan memudahkan akses terhadap Bahasa Rejang — salah satu bahasa daerah Bengkulu yang kaya. Proyek ini mencakup lima dialek utama yang digunakan di berbagai wilayah Bengkulu.
+      </p>
+      <div style="background:var(--krem);border-radius:12px;padding:16px;margin-bottom:16px;">
+        <div style="font-weight:600;color:var(--coklat);margin-bottom:8px;">📍 Lima Dialek yang Didokumentasikan:</div>
+        <ul style="font-size:0.85rem;line-height:2;padding-left:20px;color:#444;">
+          <li><strong>Lebong</strong> — Kabupaten Lebong</li>
+          <li><strong>Rejang Lebong</strong> — Kabupaten Rejang Lebong (dialek standar/referensi)</li>
+          <li><strong>Kepahiang</strong> — Kabupaten Kepahiang</li>
+          <li><strong>Bengkulu Utara</strong> — Kabupaten Bengkulu Utara</li>
+          <li><strong>Bengkulu Tengah</strong> — Kabupaten Bengkulu Tengah</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="kaganga-section">
+      <div class="subsection-title">🤝 Cara Berkontribusi</div>
+      <p style="font-size:0.85rem;line-height:1.8;color:#444;margin-bottom:12px;">
+        Proyek ini terbuka untuk semua orang! Kamu bisa berkontribusi dengan cara:
+      </p>
+      <ul style="font-size:0.85rem;line-height:2;padding-left:20px;color:#444;margin-bottom:16px;">
+        <li>Menambah atau mengoreksi kosakata di <code>data/kosakata.json</code></li>
+        <li>Memperbaiki data huruf Kaganga di <code>data/kaganga.json</code></li>
+        <li>Melaporkan kesalahan melalui GitHub Issues</li>
+        <li>Menerjemahkan antarmuka ke bahasa lain</li>
+        <li>Menambahkan rekaman suara pengucapan kata</li>
+      </ul>
+      <a href="https://github.com" class="btn btn-primary" style="display:inline-flex;text-decoration:none;">
+        ⭐ Lihat di GitHub
+      </a>
+    </div>
+
+    <div class="kaganga-section">
+      <div class="subsection-title">📚 Referensi & Lisensi</div>
+      <ul style="font-size:0.82rem;line-height:2;padding-left:20px;color:#444;">
+        <li>Jaspan, M.A. (1964). <em>A Rejang-English dictionary</em>. ANU Press.</li>
+        <li>The Unicode Standard – Rejang Block (U+A930–U+A95F)</li>
+        <li>Walker, D. (1976). <em>A grammar of the Rejang language</em>.</li>
+        <li>Data kosakata dilisensikan di bawah <strong>CC-BY-SA 4.0</strong></li>
+        <li>Kode aplikasi dilisensikan di bawah <strong>MIT License</strong></li>
+      </ul>
+    </div>
+
+    <div class="kaganga-section">
+      <div class="subsection-title">🛠️ Struktur File</div>
+      <pre style="background:var(--coklat-tua);color:var(--emas-muda);padding:16px;border-radius:10px;font-size:0.78rem;line-height:1.8;overflow-x:auto;">
+bahasa-rejang/
+├── index.html          ← Aplikasi utama (file ini)
+├── data/
+│   ├── kosakata.json   ← Database kosakata
+│   └── kaganga.json    ← Data huruf Kaganga
+├── README.md           ← Dokumentasi
+└── LICENSE             ← Lisensi MIT</pre>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Kamus Bahasa Rejang & Aksara Kaganga · Open Source · <a href="https://github.com">GitHub</a></p>
+  <p style="margin-top:4px;">Dibuat dengan ❤️ untuk melestarikan warisan budaya Bengkulu</p>
+  <p style="margin-top:4px;font-family:'Noto Sans Rejang',serif;font-size:1.1rem;color:var(--emas);letter-spacing:4px;">ꤰꤱꤲ · ꤳꤴꤵ · ꤶꤷꤸ</p>
+</footer>
+
+<script>
+// ============================================================
+//  DATA
+// ============================================================
+const KOSAKATA = [
+  { id:"001", indonesia:"air", kategori:"alam", dialek:{ lebong:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"}, rejang_lebong:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"}, kepahiang:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"}, bengkulu_utara:{kata:"waei",ipa:"waei",kaganga:"ꥀꤰꥊ"}, bengkulu_tengah:{kata:"wai",ipa:"wai",kaganga:"ꥀꤰꥇ"} }},
+  { id:"002", indonesia:"api", kategori:"alam", dialek:{ lebong:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, rejang_lebong:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, kepahiang:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, bengkulu_utara:{kata:"apui",ipa:"apui",kaganga:"ꤰꤶꥈꥇ"}, bengkulu_tengah:{kata:"apoi",ipa:"apoi",kaganga:"ꤰꤶꥋꥇ"} }},
+  { id:"003", indonesia:"batu", kategori:"alam", dialek:{ lebong:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"}, rejang_lebong:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"}, kepahiang:{kata:"beteun",ipa:"bəteun",kaganga:"ꤷꤳꤳꥈꤵ"}, bengkulu_utara:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"}, bengkulu_tengah:{kata:"beto",ipa:"bəto",kaganga:"ꤷꤳꥋ"} }},
+  { id:"004", indonesia:"rumah", kategori:"bangunan", dialek:{ lebong:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, rejang_lebong:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, kepahiang:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, bengkulu_utara:{kata:"umeak",ipa:"umeaʔ",kaganga:"ꤰꥈꤸꥇꤰ"}, bengkulu_tengah:{kata:"umea",ipa:"umea",kaganga:"ꤰꥈꤸꥊ"} }},
+  { id:"005", indonesia:"ibu", kategori:"keluarga", dialek:{ lebong:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, rejang_lebong:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, kepahiang:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, bengkulu_utara:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"}, bengkulu_tengah:{kata:"ino",ipa:"ino",kaganga:"ꤰꥇꤵꥋ"} }},
+  { id:"006", indonesia:"ayah / bapak", kategori:"keluarga", dialek:{ lebong:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"}, rejang_lebong:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"}, kepahiang:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"}, bengkulu_utara:{kata:"bapak",ipa:"bapaʔ",kaganga:"ꤷꤰꤶꤰ"}, bengkulu_tengah:{kata:"bapeak",ipa:"bapeaʔ",kaganga:"ꤷꤰꤶꥇꤰ"} }},
+  { id:"007", indonesia:"anak", kategori:"keluarga", dialek:{ lebong:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, rejang_lebong:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, kepahiang:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, bengkulu_utara:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"}, bengkulu_tengah:{kata:"anak",ipa:"anak",kaganga:"ꤰꤵꤰ"} }},
+  { id:"008", indonesia:"makan", kategori:"kegiatan", dialek:{ lebong:{kata:"ngen",ipa:"ŋen",kaganga:"ꤲꤵ"}, rejang_lebong:{kata:"ngen",ipa:"ŋen",kaganga:"ꤲꤵ"}, kepahiang:{kata:"ngon",ipa:"ŋon",kaganga:"ꤲꤵ"}, bengkulu_utara:{kata:"ngen",ipa:"ŋen",kaganga:"ꤲꤵ"}, bengkulu_tengah:{kata:"man",ipa:"man",kaganga:"ꤸꤵ"} }},
+  { id:"009", indonesia:"minum", kategori:"kegiatan", dialek:{ lebong:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"}, rejang_lebong:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"}, kepahiang:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"}, bengkulu_utara:{kata:"minem",ipa:"minəm",kaganga:"ꤸꥇꤵꤸ"}, bengkulu_tengah:{kata:"minom",ipa:"minom",kaganga:"ꤸꥇꤵꥋꤸ"} }},
+  { id:"010", indonesia:"pergi", kategori:"kegiatan", dialek:{ lebong:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"}, rejang_lebong:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"}, kepahiang:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"}, bengkulu_utara:{kata:"luop",ipa:"luop",kaganga:"ꤾꥈꥋꤶ"}, bengkulu_tengah:{kata:"lop",ipa:"lop",kaganga:"ꤾꥋꤶ"} }},
+  { id:"011", indonesia:"tidur", kategori:"kegiatan", dialek:{ lebong:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, rejang_lebong:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, kepahiang:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, bengkulu_utara:{kata:"medep",ipa:"medep",kaganga:"ꤸꤴꤶ"}, bengkulu_tengah:{kata:"medem",ipa:"medəm",kaganga:"ꤸꤴꤸ"} }},
+  { id:"012", indonesia:"satu", kategori:"angka", dialek:{ lebong:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"}, rejang_lebong:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"}, kepahiang:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"}, bengkulu_utara:{kata:"saei",ipa:"saei",kaganga:"ꤼꥊ"}, bengkulu_tengah:{kata:"sa'ei",ipa:"saʔei",kaganga:"ꤼꤰꥊ"} }},
+  { id:"013", indonesia:"dua", kategori:"angka", dialek:{ lebong:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, rejang_lebong:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, kepahiang:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, bengkulu_utara:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"}, bengkulu_tengah:{kata:"duei",ipa:"duei",kaganga:"ꤴꥈꥊ"} }},
+  { id:"014", indonesia:"tiga", kategori:"angka", dialek:{ lebong:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, rejang_lebong:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, kepahiang:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, bengkulu_utara:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"}, bengkulu_tengah:{kata:"telo",ipa:"telo",kaganga:"ꤳꤾꥋ"} }},
+  { id:"015", indonesia:"empat", kategori:"angka", dialek:{ lebong:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, rejang_lebong:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, kepahiang:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, bengkulu_utara:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"}, bengkulu_tengah:{kata:"mpat",ipa:"mpat",kaganga:"ꤸꤶꤰꤳ"} }},
+  { id:"016", indonesia:"lima", kategori:"angka", dialek:{ lebong:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, rejang_lebong:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, kepahiang:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, bengkulu_utara:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"}, bengkulu_tengah:{kata:"limo",ipa:"limo",kaganga:"ꤾꥇꤸꥋ"} }},
+  { id:"017", indonesia:"enam", kategori:"angka", dialek:{ lebong:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, rejang_lebong:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, kepahiang:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, bengkulu_utara:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"}, bengkulu_tengah:{kata:"enam",ipa:"enam",kaganga:"ꤰꤵꤰꤸ"} }},
+  { id:"018", indonesia:"tujuh", kategori:"angka", dialek:{ lebong:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"}, rejang_lebong:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"}, kepahiang:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"}, bengkulu_utara:{kata:"tujuh",ipa:"tujuh",kaganga:"ꤳꥈꤺꥈ꤁"}, bengkulu_tengah:{kata:"tujoh",ipa:"tujoh",kaganga:"ꤳꥈꤺꥋ꤁"} }},
+  { id:"019", indonesia:"delapan", kategori:"angka", dialek:{ lebong:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, rejang_lebong:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, kepahiang:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, bengkulu_utara:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"}, bengkulu_tengah:{kata:"delapan",ipa:"dəlapan",kaganga:"ꤴꤾꤶꤵ"} }},
+  { id:"020", indonesia:"sembilan", kategori:"angka", dialek:{ lebong:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, rejang_lebong:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, kepahiang:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, bengkulu_utara:{kata:"sebo'",ipa:"səboʔ",kaganga:"ꤼꤷꥋꤰ"}, bengkulu_tengah:{kata:"sebo",ipa:"səbo",kaganga:"ꤼꤷꥋ"} }},
+  { id:"021", indonesia:"sepuluh", kategori:"angka", dialek:{ lebong:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"}, rejang_lebong:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"}, kepahiang:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"}, bengkulu_utara:{kata:"sepuluh",ipa:"səpuluh",kaganga:"ꤼꤶꥈꤾꥈ꤁"}, bengkulu_tengah:{kata:"sepuloh",ipa:"səpuloh",kaganga:"ꤼꤶꥈꤾꥋ꤁"} }},
+  { id:"022", indonesia:"saya / aku", kategori:"kata_ganti", dialek:{ lebong:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, rejang_lebong:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, kepahiang:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, bengkulu_utara:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"}, bengkulu_tengah:{kata:"uku",ipa:"uku",kaganga:"ꤰꥈꤰꥈ"} }},
+  { id:"023", indonesia:"kamu / kau", kategori:"kata_ganti", dialek:{ lebong:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, rejang_lebong:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, kepahiang:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, bengkulu_utara:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"}, bengkulu_tengah:{kata:"kite",ipa:"kite",kaganga:"ꤰꥇꤳ"} }},
+  { id:"024", indonesia:"dia", kategori:"kata_ganti", dialek:{ lebong:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"}, rejang_lebong:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"}, kepahiang:{kata:"bie",ipa:"bie",kaganga:"ꤷꥇꤰ"}, bengkulu_utara:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"}, bengkulu_tengah:{kata:"bi'ei",ipa:"biʔei",kaganga:"ꤷꥇꤰꥊ"} }},
+  { id:"025", indonesia:"besar", kategori:"sifat", dialek:{ lebong:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"}, rejang_lebong:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"}, kepahiang:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"}, bengkulu_utara:{kata:"gede",ipa:"gede",kaganga:"ꤱꤴ"}, bengkulu_tengah:{kata:"gedang",ipa:"gədaŋ",kaganga:"ꤱꤴꤲ"} }},
+  { id:"026", indonesia:"kecil", kategori:"sifat", dialek:{ lebong:{kata:"keci'",ipa:"kəciʔ",kaganga:"ꤰꤹꥇꤰ"}, rejang_lebong:{kata:"keci'",ipa:"kəciʔ",kaganga:"ꤰꤹꥇꤰ"}, kepahiang:{kata:"kecik",ipa:"kəcik",kaganga:"ꤰꤹꥇꤰ"}, bengkulu_utara:{kata:"keci'",ipa:"kəciʔ",kaganga:"ꤰꤹꥇꤰ"}, bengkulu_tengah:{kata:"kecik",ipa:"kəcik",kaganga:"ꤰꤹꥇꤰ"} }},
+  { id:"027", indonesia:"panas", kategori:"sifat", dialek:{ lebong:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, rejang_lebong:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, kepahiang:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, bengkulu_utara:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"}, bengkulu_tengah:{kata:"angat",ipa:"aŋat",kaganga:"ꤰꤲꤳ"} }},
+  { id:"028", indonesia:"dingin", kategori:"sifat", dialek:{ lebong:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"}, rejang_lebong:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"}, kepahiang:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"}, bengkulu_utara:{kata:"besio",ipa:"bəsio",kaganga:"ꤷꤼꥇꥋ"}, bengkulu_tengah:{kata:"bedien",ipa:"bədiən",kaganga:"ꤷꤴꥇꤵ"} }},
+  { id:"029", indonesia:"matahari", kategori:"alam", dialek:{ lebong:{kata:"mato lem",ipa:"mato lem",kaganga:"ꤸꤳꥋ ꤾꤸ"}, rejang_lebong:{kata:"mato lem",ipa:"mato lem",kaganga:"ꤸꤳꥋ ꤾꤸ"}, kepahiang:{kata:"mato arei",ipa:"mato arei",kaganga:"ꤸꤳꥋ ꤰꤽꥊ"}, bengkulu_utara:{kata:"mato arei",ipa:"mato arei",kaganga:"ꤸꤳꥋ ꤰꤽꥊ"}, bengkulu_tengah:{kata:"mato lem",ipa:"mato lem",kaganga:"ꤸꤳꥋ ꤾꤸ"} }},
+  { id:"030", indonesia:"bulan", kategori:"alam", dialek:{ lebong:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, rejang_lebong:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, kepahiang:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, bengkulu_utara:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"}, bengkulu_tengah:{kata:"bulan",ipa:"bulan",kaganga:"ꤷꥈꤾꤵ"} }},
+  { id:"031", indonesia:"bintang", kategori:"alam", dialek:{ lebong:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, rejang_lebong:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, kepahiang:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, bengkulu_utara:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"}, bengkulu_tengah:{kata:"bintang",ipa:"bintaŋ",kaganga:"ꤷꥇꤵꤳꤲ"} }},
+  { id:"032", indonesia:"hutan", kategori:"alam", dialek:{ lebong:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, rejang_lebong:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, kepahiang:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, bengkulu_utara:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"}, bengkulu_tengah:{kata:"utan",ipa:"utan",kaganga:"ꤰꥈꤳꤵ"} }},
+  { id:"033", indonesia:"sawah", kategori:"alam", dialek:{ lebong:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, rejang_lebong:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, kepahiang:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, bengkulu_utara:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"}, bengkulu_tengah:{kata:"umo",ipa:"umo",kaganga:"ꤰꥈꤸꥋ"} }},
+  { id:"034", indonesia:"bagus / indah", kategori:"sifat", dialek:{ lebong:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, rejang_lebong:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, kepahiang:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, bengkulu_utara:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"}, bengkulu_tengah:{kata:"lemak",ipa:"ləmaʔ",kaganga:"ꤾꤸꤰ"} }},
+  { id:"035", indonesia:"terima kasih", kategori:"ungkapan", dialek:{ lebong:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"}, rejang_lebong:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"}, kepahiang:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"}, bengkulu_utara:{kata:"mak asih",ipa:"mak asih",kaganga:"ꤸꤰ ꤰꤼꥇ꤁"}, bengkulu_tengah:{kata:"mo te'",ipa:"mo teʔ",kaganga:"ꤸꥋ ꤳꤰ"} }},
+  { id:"036", indonesia:"selamat pagi", kategori:"ungkapan", dialek:{ lebong:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, rejang_lebong:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, kepahiang:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, bengkulu_utara:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"}, bengkulu_tengah:{kata:"slamat pagi",ipa:"slamat pagi",kaganga:"ꤼꤾꤸꤳ ꤶꤱꥇ"} }},
+  { id:"037", indonesia:"tangan", kategori:"tubuh", dialek:{ lebong:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, rejang_lebong:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, kepahiang:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, bengkulu_utara:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"}, bengkulu_tengah:{kata:"tangan",ipa:"taŋan",kaganga:"ꤳꤲꤵ"} }},
+  { id:"038", indonesia:"kaki", kategori:"tubuh", dialek:{ lebong:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, rejang_lebong:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, kepahiang:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, bengkulu_utara:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"}, bengkulu_tengah:{kata:"bitis",ipa:"bitis",kaganga:"ꤷꥇꤳꥇꤼ"} }},
+  { id:"039", indonesia:"mata", kategori:"tubuh", dialek:{ lebong:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, rejang_lebong:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, kepahiang:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, bengkulu_utara:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"}, bengkulu_tengah:{kata:"mato",ipa:"mato",kaganga:"ꤸꤳꥋ"} }},
+  { id:"040", indonesia:"kepala", kategori:"tubuh", dialek:{ lebong:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, rejang_lebong:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, kepahiang:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, bengkulu_utara:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"}, bengkulu_tengah:{kata:"kepalo",ipa:"kəpalo",kaganga:"ꤰꤶꤾꥋ"} }}
+];
+
+const KAGANGA_KONSONAN = [
+  { huruf:"ꤰ", unicode:"U+A930", latin:"ka", ipa:"k", nama:"Ka", contoh:"ꤰꥇꤳ (kite = kamu)" },
+  { huruf:"ꤱ", unicode:"U+A931", latin:"ga", ipa:"g", nama:"Ga", contoh:"ꤱꤴꤲ (gedang = besar)" },
+  { huruf:"ꤲ", unicode:"U+A932", latin:"nga", ipa:"ŋ", nama:"Nga", contoh:"ꤲꤵ (ngen = makan)" },
+  { huruf:"ꤳ", unicode:"U+A933", latin:"ta", ipa:"t", nama:"Ta", contoh:"ꤳꤾꥋ (telo = tiga)" },
+  { huruf:"ꤴ", unicode:"U+A934", latin:"da", ipa:"d", nama:"Da", contoh:"ꤴꥈꥊ (duei = dua)" },
+  { huruf:"ꤵ", unicode:"U+A935", latin:"na", ipa:"n", nama:"Na", contoh:"ꤵꥋ (no = itu)" },
+  { huruf:"ꤶ", unicode:"U+A936", latin:"pa", ipa:"p", nama:"Pa", contoh:"ꤶꤱꥇ (pagi = pagi)" },
+  { huruf:"ꤷ", unicode:"U+A937", latin:"ba", ipa:"b", nama:"Ba", contoh:"ꤷꥈꤾꤵ (bulan = bulan)" },
+  { huruf:"ꤸ", unicode:"U+A938", latin:"ma", ipa:"m", nama:"Ma", contoh:"ꤸꤳꥋ (mato = mata)" },
+  { huruf:"ꤹ", unicode:"U+A939", latin:"ca", ipa:"tʃ", nama:"Ca", contoh:"ꤰꤹꥇꤰ (keci = kecil)" },
+  { huruf:"ꤺ", unicode:"U+A93A", latin:"ja", ipa:"dʒ", nama:"Ja", contoh:"ꤺꥇꤾꥋ (jilo = jauh)" },
+  { huruf:"ꤻ", unicode:"U+A93B", latin:"nya", ipa:"ɲ", nama:"Nya", contoh:"ꤻꤰꤳ (nyakat = naik)" },
+  { huruf:"ꤼ", unicode:"U+A93C", latin:"sa", ipa:"s", nama:"Sa", contoh:"ꤼꤰꥊ (sa'ei = satu)" },
+  { huruf:"ꤽ", unicode:"U+A93D", latin:"ra", ipa:"r", nama:"Ra", contoh:"ꤽꥈꤸꤰ (rumak = rumput)" },
+  { huruf:"ꤾ", unicode:"U+A93E", latin:"la", ipa:"l", nama:"La", contoh:"ꤾꥇꤸꥋ (limo = lima)" },
+  { huruf:"ꤿ", unicode:"U+A93F", latin:"ya", ipa:"j", nama:"Ya", contoh:"ꤿꥊ (yai = nenek)" },
+  { huruf:"ꥀ", unicode:"U+A940", latin:"wa", ipa:"w", nama:"Wa", contoh:"ꥀꤰꥇ (wai = air)" },
+  { huruf:"ꥁ", unicode:"U+A941", latin:"ha", ipa:"h", nama:"Ha", contoh:"ꥁꤰꥇ (hai = halo)" },
+  { huruf:"ꥂ", unicode:"U+A942", latin:"mba", ipa:"mb", nama:"Mba", contoh:"ꥂꤰꤽ (mbar = hambur)" },
+  { huruf:"ꥃ", unicode:"U+A943", latin:"ngga", ipa:"ŋɡ", nama:"Ngga", contoh:"ꥃꤰꥇ (nggai = tidak)" },
+  { huruf:"ꥄ", unicode:"U+A944", latin:"nda", ipa:"nd", nama:"Nda", contoh:"ꥄꤰꤾ (ndal = jatuh)" },
+  { huruf:"ꥅ", unicode:"U+A945", latin:"ndra", ipa:"ndr", nama:"Ndra", contoh:"ꥅꥋꤸ (ndrom = tenggelam)" },
+  { huruf:"ꥆ", unicode:"U+A946", latin:"ngka", ipa:"ŋk", nama:"Ngka", contoh:"ꥆꥇ (ngkai = kakak)" }
+];
+
+const KAGANGA_VOKAL = [
+  { huruf:"ꥇ", unicode:"U+A947", latin:"i", ipa:"i", nama:"Vokal I", contoh:"ꤰꥇ = ki" },
+  { huruf:"ꥈ", unicode:"U+A948", latin:"u", ipa:"u", nama:"Vokal U", contoh:"ꤰꥈ = ku" },
+  { huruf:"ꥉ", unicode:"U+A949", latin:"e", ipa:"e", nama:"Vokal E", contoh:"ꤰꥉ = ke" },
+  { huruf:"ꥊ", unicode:"U+A94A", latin:"ai", ipa:"ai", nama:"Vokal AI", contoh:"ꤰꥊ = kai" },
+  { huruf:"ꥋ", unicode:"U+A94B", latin:"o", ipa:"o", nama:"Vokal O", contoh:"ꤰꥋ = ko" },
+  { huruf:"ꥌ", unicode:"U+A94C", latin:"au", ipa:"au", nama:"Vokal AU", contoh:"ꤰꥌ = kau" },
+  { huruf:"ꥍ", unicode:"U+A94D", latin:"(mati)", ipa:"◌̈", nama:"Virama", contoh:"ꤰꥍ = k (mati)" },
+  { huruf:"ꥎ", unicode:"U+A94E", latin:"ea", ipa:"əa", nama:"Vokal EA", contoh:"ꤰꥎ = kea" }
+];
+
+const KAGANGA_ANGKA = [
+  { huruf:"꤀", unicode:"U+A900", latin:"0", nama:"Nol" },
+  { huruf:"꤁", unicode:"U+A901", latin:"1", nama:"Satu" },
+  { huruf:"꤂", unicode:"U+A902", latin:"2", nama:"Dua" },
+  { huruf:"꤃", unicode:"U+A903", latin:"3", nama:"Tiga" },
+  { huruf:"꤄", unicode:"U+A904", latin:"4", nama:"Empat" },
+  { huruf:"꤅", unicode:"U+A905", latin:"5", nama:"Lima" },
+  { huruf:"꤆", unicode:"U+A906", latin:"6", nama:"Enam" },
+  { huruf:"꤇", unicode:"U+A907", latin:"7", nama:"Tujuh" },
+  { huruf:"꤈", unicode:"U+A908", latin:"8", nama:"Delapan" },
+  { huruf:"꤉", unicode:"U+A909", latin:"9", nama:"Sembilan" }
+];
+
+// ============================================================
+//  STATE
+// ============================================================
+let kategoriAktif = 'semua';
+let kuisMode = 'huruf';
+let skorBenar = 0, skorTotal = 0;
+let kuisSoalSaatIni = null;
+let kuisSelesai = false;
+const DIALEK_NAMA = {
+  lebong: 'Lebong',
+  rejang_lebong: 'Rejang Lebong',
+  kepahiang: 'Kepahiang',
+  bengkulu_utara: 'Bengkulu Utara',
+  bengkulu_tengah: 'Bengkulu Tengah'
+};
+
+// ============================================================
+//  NAVIGASI TAB
+// ============================================================
+function gantiTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('aktif'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('aktif'));
+  document.getElementById('tab-' + id).classList.add('aktif');
+  btn.classList.add('aktif');
+  if (id === 'kuis') initKuis();
+  if (id === 'kaganga') renderKaganga();
+  if (id === 'konverter') renderPanduan();
+}
+
+// ============================================================
+//  KAMUS
+// ============================================================
+function cariKata() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const dialek = document.getElementById('dialekFilter').value;
+
+  let hasil = KOSAKATA.filter(item => {
+    const cocokkategori = kategoriAktif === 'semua' || item.kategori === kategoriAktif;
+    if (!cocokkategori) return false;
+
+    if (!q) return true;
+
+    if (item.indonesia.toLowerCase().includes(q)) return true;
+
+    const dialekList = dialek === 'semua' ? Object.keys(item.dialek) : [dialek];
+    return dialekList.some(d => item.dialek[d] && item.dialek[d].kata.toLowerCase().includes(q));
+  });
+
+  document.getElementById('resultsCount').textContent = `${hasil.length} kata ditemukan`;
+
+  const grid = document.getElementById('wordGrid');
+  if (hasil.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Kata tidak ditemukan. Coba kata lain atau ubah filter.</p></div>`;
+    return;
+  }
+
+  const dialekToShow = dialek === 'semua'
+    ? ['lebong','rejang_lebong','kepahiang','bengkulu_utara','bengkulu_tengah']
+    : [dialek];
+
+  grid.innerHTML = hasil.map(item => `
+    <div class="word-card">
+      <div class="word-indonesia">${item.indonesia}</div>
+      <span class="word-kategori">${labelKategori(item.kategori)}</span>
+      <div class="dialek-grid">
+        ${dialekToShow.map(d => item.dialek[d] ? `
+          <div class="dialek-item">
+            <div class="dialek-nama">${DIALEK_NAMA[d]}</div>
+            <div class="dialek-kata">${item.dialek[d].kata}</div>
+            <div class="dialek-kaganga">${item.dialek[d].kaganga}</div>
+            <div class="dialek-ipa">/${item.dialek[d].ipa}/</div>
+          </div>
+        ` : '').join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function labelKategori(k) {
+  const map = { alam:'🌿 Alam', keluarga:'👨‍👩‍👧 Keluarga', kegiatan:'🏃 Kegiatan',
+    angka:'🔢 Angka', sifat:'💫 Sifat', tubuh:'🫀 Tubuh',
+    kata_ganti:'🗣️ Kata Ganti', ungkapan:'💬 Ungkapan', bangunan:'🏠 Bangunan' };
+  return map[k] || k;
+}
+
+function filterKategori(kat, el) {
+  kategoriAktif = kat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('aktif'));
+  el.classList.add('aktif');
+  cariKata();
+}
+
+// ============================================================
+//  KAGANGA
+// ============================================================
+function renderKaganga() {
+  if (document.getElementById('gridKonsonan').innerHTML) return;
+
+  document.getElementById('gridKonsonan').innerHTML = KAGANGA_KONSONAN.map(c => `
+    <div class="char-card">
+      <span class="char-big">${c.huruf}</span>
+      <div class="char-latin">${c.latin}</div>
+      <div class="char-nama">${c.nama}</div>
+      <div class="char-unicode">${c.unicode}</div>
+      <div class="char-contoh">
+        <div>Bunyi: <strong>/${c.ipa}/</strong></div>
+        <div style="margin-top:4px;font-family:'Noto Sans Rejang',serif;font-size:0.9rem">${c.contoh}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('gridVokal').innerHTML = KAGANGA_VOKAL.map(v => `
+    <div class="char-card">
+      <div class="char-big">ꤰ${v.huruf}</div>
+      <div class="char-latin">${v.latin}</div>
+      <div class="char-nama">${v.nama}</div>
+      <div class="char-unicode">${v.unicode}</div>
+      <div class="char-contoh">
+        <div>Bunyi: <strong>/${v.ipa}/</strong></div>
+        <div style="margin-top:4px;font-family:'Noto Sans Rejang',serif;font-size:0.9rem">${v.contoh}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('gridAngka').innerHTML = KAGANGA_ANGKA.map(a => `
+    <div class="char-card">
+      <span class="char-big">${a.huruf}</span>
+      <div class="char-latin">${a.latin}</div>
+      <div class="char-nama">${a.nama}</div>
+      <div class="char-unicode">${a.unicode}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+//  KONVERTER
+// ============================================================
+const KONSONAN_MAP = {
+  'ngg': 'ꥃ', 'mb': 'ꥂ', 'nd': 'ꥄ', 'ny': 'ꤻ', 'ng': 'ꤲ',
+  'k': 'ꤰ', 'g': 'ꤱ', 't': 'ꤳ', 'd': 'ꤴ', 'n': 'ꤵ',
+  'p': 'ꤶ', 'b': 'ꤷ', 'm': 'ꤸ', 'c': 'ꤹ', 'j': 'ꤺ',
+  's': 'ꤼ', 'r': 'ꤽ', 'l': 'ꤾ', 'y': 'ꤿ', 'w': 'ꥀ', 'h': 'ꥁ'
+};
+
+const VOKAL_MAP = {
+  'ai': 'ꥊ', 'au': 'ꥌ', 'ea': 'ꥎ',
+  'i': 'ꥇ', 'u': 'ꥈ', 'e': 'ꥉ', 'o': 'ꥋ', 'a': ''
+};
+
+const KONSONAN_KEYS = Object.keys(KONSONAN_MAP).sort((a, b) => b.length - a.length);
+const VOKAL_KEYS = ['ai','au','ea','i','u','e','o','a'];
+const CARRIER = 'ꤰ';
+
+function toLatin2Kaganga(text) {
+  if (!text.trim()) return '';
+  let result = '';
+  let i = 0;
+  const t = text.toLowerCase();
+
+  while (i < t.length) {
+    const ch = t[i];
+
+    if (ch === ' ' || ch === '\n' || ch === '\r') {
+      result += ch; i++; continue;
+    }
+
+    if (ch === "'" || ch === '\'') {
+      result += 'ꤰ'; i++; continue;
+    }
+
+    // Try consonant
+    let konsonan = null, konsLen = 0;
+    for (const key of KONSONAN_KEYS) {
+      if (t.slice(i).startsWith(key)) {
+        konsonan = KONSONAN_MAP[key];
+        konsLen = key.length;
+        break;
+      }
+    }
+
+    if (konsonan) {
+      result += konsonan;
+      i += konsLen;
+      // Following vowel
+      let vokalDitemukan = false;
+      for (const vk of VOKAL_KEYS) {
+        if (t.slice(i).startsWith(vk)) {
+          result += VOKAL_MAP[vk];
+          i += vk.length;
+          vokalDitemukan = true;
+          break;
+        }
+      }
+      if (!vokalDitemukan) {
+        result += 'ꥍ'; // virama for dead consonant
+      }
+    } else {
+      // Try vowel with carrier
+      let vokalDitemukan = false;
+      for (const vk of VOKAL_KEYS) {
+        if (t.slice(i).startsWith(vk)) {
+          result += CARRIER + VOKAL_MAP[vk];
+          i += vk.length;
+          vokalDitemukan = true;
+          break;
+        }
+      }
+      if (!vokalDitemukan) {
+        result += ch; i++;
+      }
+    }
+  }
+  return result;
+}
+
+function konversiTeks() {
+  const input = document.getElementById('inputLatin').value;
+  const output = toLatin2Kaganga(input);
+  document.getElementById('outputKaganga').textContent = output || '—';
+}
+
+function konversiContoh(teks) {
+  document.getElementById('inputLatin').value = teks;
+  konversiTeks();
+}
+
+function salinKaganga() {
+  const teks = document.getElementById('outputKaganga').textContent;
+  if (teks && teks !== '—') {
+    navigator.clipboard.writeText(teks).then(() => alert('Teks Kaganga disalin!')).catch(() => {});
+  }
+}
+
+function renderPanduan() {
+  if (document.getElementById('panduanLatin').innerHTML) return;
+  const panduan = [
+    { latin: 'k, g, t, d, n, p, b, m, c, j, s, r, l, y, w, h', kaganga: 'ꤰꤱꤳꤴꤵꤶꤷꤸꤹꤺꤼꤽꤾꤿꥀꥁ', desc: 'Konsonan tunggal' },
+    { latin: 'ng', kaganga: 'ꤲ', desc: 'Bunyi "ng" seperti dalam "ngang"' },
+    { latin: 'ny', kaganga: 'ꤻ', desc: 'Bunyi "ny" seperti dalam "nyawa"' },
+    { latin: 'mb', kaganga: 'ꥂ', desc: 'Bunyi "mb" seperti dalam "mbak"' },
+    { latin: 'nd', kaganga: 'ꥄ', desc: 'Bunyi "nd"' },
+    { latin: 'ngg', kaganga: 'ꥃ', desc: 'Bunyi "ngg" seperti dalam "nggak"' },
+    { latin: 'a', kaganga: '(bawaan)', desc: 'Vokal "a" sudah ada di setiap konsonan, tidak perlu tulis tanda vokal' },
+    { latin: 'i', kaganga: 'ꥇ', desc: 'Tambahkan setelah konsonan: "ki" = ꤰꥇ' },
+    { latin: 'u', kaganga: 'ꥈ', desc: 'Tambahkan setelah konsonan: "ku" = ꤰꥈ' },
+    { latin: 'e', kaganga: 'ꥉ', desc: 'Tambahkan setelah konsonan: "ke" = ꤰꥉ' },
+    { latin: 'o', kaganga: 'ꥋ', desc: 'Tambahkan setelah konsonan: "ko" = ꤰꥋ' },
+    { latin: 'ai', kaganga: 'ꥊ', desc: 'Vokal diftong "ai": "kai" = ꤰꥊ' },
+    { latin: 'au', kaganga: 'ꥌ', desc: 'Vokal diftong "au": "kau" = ꤰꥌ' },
+    { latin: "' (apostrof)", kaganga: 'ꤰ', desc: 'Tanda hamzah/glotal stop menggunakan carrier ꤰ' },
+  ];
+
+  document.getElementById('panduanLatin').innerHTML = panduan.map(p => `
+    <div class="rule-item">
+      <div>
+        <div class="rule-latin">${p.latin}</div>
+        <div class="rule-kaganga">${p.kaganga}</div>
+      </div>
+      <div class="rule-desc">${p.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+//  KUIS
+// ============================================================
+let kuisPool = [];
+let kuisIndex = 0;
+
+function setMode(mode) {
+  kuisMode = mode;
+  document.querySelectorAll('[id^="mode-"]').forEach(b => b.style.fontWeight = '');
+  document.getElementById('mode-' + mode).style.fontWeight = '700';
+  resetKuis();
+}
+
+function resetKuis() {
+  skorBenar = 0; skorTotal = 0; kuisIndex = 0;
+  document.getElementById('skorBenar').textContent = '0';
+  document.getElementById('skorTotal').textContent = '0';
+  document.getElementById('skorPersen').textContent = '—';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('feedbackMsg').textContent = '';
+  document.getElementById('feedbackMsg').className = 'feedback-msg';
+  buatSoal();
+}
+
+function initKuis() {
+  if (kuisPool.length === 0) resetKuis();
+}
+
+function acak(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function ambilAcak(arr, n) { return acak(arr).slice(0, n); }
+
+function buatSoal() {
+  let soal, pertanyaan, target, pilihan, jawaban;
+
+  if (kuisMode === 'huruf') {
+    const pool = KAGANGA_KONSONAN;
+    const idx = Math.floor(Math.random() * pool.length);
+    soal = pool[idx];
+    pertanyaan = 'Apa bunyi huruf Kaganga ini?';
+    target = soal.huruf;
+    jawaban = soal.latin;
+    const salah = ambilAcak(pool.filter(x => x.latin !== soal.latin), 3).map(x => x.latin);
+    pilihan = acak([jawaban, ...salah]);
+    document.getElementById('kuisTarget').className = 'kuis-target';
+    document.getElementById('kuisTarget').textContent = target;
+  } else {
+    const pool = KOSAKATA;
+    const idx = Math.floor(Math.random() * pool.length);
+    soal = pool[idx];
+    const dialekList = Object.keys(soal.dialek);
+    const dialek = dialekList[Math.floor(Math.random() * dialekList.length)];
+    pertanyaan = `Apa artinya kata ini? (Dialek: ${DIALEK_NAMA[dialek]})`;
+    target = soal.dialek[dialek].kata;
+    jawaban = soal.indonesia;
+    const salah = ambilAcak(pool.filter(x => x.indonesia !== soal.indonesia), 3).map(x => x.indonesia);
+    pilihan = acak([jawaban, ...salah]);
+    document.getElementById('kuisTarget').className = 'kuis-target kata';
+    document.getElementById('kuisTarget').textContent = target;
+  }
+
+  kuisSoalSaatIni = { jawaban };
+  document.getElementById('kuisPertanyaan').textContent = pertanyaan;
+  document.getElementById('feedbackMsg').textContent = '';
+  document.getElementById('feedbackMsg').className = 'feedback-msg';
+
+  const pilEl = document.getElementById('kuisPilihan');
+  pilEl.innerHTML = pilihan.map(p => `
+    <button class="kuis-btn" onclick="jawab('${p.replace(/'/g, "\\'")}')">${p}</button>
+  `).join('');
+}
+
+function jawab(pilihan) {
+  const benar = pilihan === kuisSoalSaatIni.jawaban;
+  skorTotal++;
+  if (benar) skorBenar++;
+
+  const persen = Math.round((skorBenar / skorTotal) * 100);
+  document.getElementById('skorBenar').textContent = skorBenar;
+  document.getElementById('skorTotal').textContent = skorTotal;
+  document.getElementById('skorPersen').textContent = persen + '%';
+  document.getElementById('progressFill').style.width = Math.min(skorTotal * 5, 100) + '%';
+
+  const allBtn = document.querySelectorAll('.kuis-btn');
+  allBtn.forEach(b => {
+    b.disabled = true;
+    if (b.textContent === kuisSoalSaatIni.jawaban) b.classList.add('benar');
+    else if (b.textContent === pilihan && !benar) b.classList.add('salah');
+  });
+
+  const fb = document.getElementById('feedbackMsg');
+  if (benar) {
+    fb.textContent = '✅ Benar! Bagus sekali!';
+    fb.className = 'feedback-msg benar';
+  } else {
+    fb.textContent = `❌ Salah. Jawaban yang benar: ${kuisSoalSaatIni.jawaban}`;
+    fb.className = 'feedback-msg salah';
+  }
+
+  setTimeout(buatSoal, 1600);
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+cariKata();
+renderPanduan();
+</script>
+</body>
+</html>
