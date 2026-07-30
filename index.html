@@ -1967,7 +1967,7 @@ function buatSoal(){
   kuisSoal = {jawaban};
   document.getElementById('kuisPertanyaan').textContent = pertanyaan;
   document.getElementById('kuisPilihan').innerHTML = pilihan.map(p=>`
-    <button class="kuis-btn" onclick="jawab(${JSON.stringify(p)})">${p}</button>`).join('');
+    <button class="kuis-btn" onclick="jawab(this.textContent.trim())">${p}</button>`).join('');
 }
 
 function jawab(pilihan){
