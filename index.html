@@ -115,6 +115,15 @@ footer a:hover{text-decoration:underline;}
 .badge-sumber{display:inline-block;background:#003580;color:#fff;border-radius:6px;padding:2px 7px;font-size:.65rem;font-weight:600;margin-left:4px;vertical-align:middle;}
 .berendo-entry{border-left:3px solid #003580;}
 .berendo-entry .dialek-kata{color:var(--coklat-tua);}
+
+.trans-row{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid #f0ebe3}
+.trans-row:last-child{border-bottom:none}
+.trans-label{font-size:.75rem;font-weight:700;color:var(--coklat);min-width:90px;padding-top:2px;flex-shrink:0}
+.trans-val{font-size:.9rem;line-height:1.9;flex:1;word-break:break-word}
+.trans-hit{color:#2d5a1b;font-weight:600;margin-right:4px}
+.trans-miss{color:#aaa;font-style:italic;margin-right:4px}
+.trans-kaganga{font-family:'Noto Sans Rejang',serif;font-size:1.1rem}
+.trans-box{background:#fdf9f4;border:1px solid #e8ddd0;border-radius:12px;padding:14px 16px;margin-top:12px}
 </style>
 </head>
 <body>
@@ -247,6 +256,38 @@ footer a:hover{text-decoration:underline;}
   </div>
 </div>
 
+  <div class="kaganga-section" style="margin-top:24px">
+    <div class="subsection-title">🌐 Terjemah: Indonesia → Rejang & Inggris</div>
+    <p style="font-size:.83rem;color:#666;margin:6px 0 12px">Terjemah kata per kata menggunakan kosakata BERENDO. Kata yang tidak ditemukan ditampilkan dalam <em>[kurung]</em>.</p>
+    <div class="converter-box">
+      <div style="margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <label style="font-size:.8rem;font-weight:600;color:#555">Dialek:</label>
+        <select id="dialekTerjemah" style="padding:5px 10px;border-radius:8px;border:1px solid #ddd;font-size:.82rem" onchange="terjemahTeks()">
+          <option value="rejang_lebong">Rejang Lebong</option>
+          <option value="lebong">Lebong</option>
+          <option value="kepahiang">Kepahiang</option>
+          <option value="bengkulu_utara">Bengkulu Utara</option>
+          <option value="bengkulu_tengah">Bengkulu Tengah</option>
+        </select>
+        <button class="btn btn-outline" onclick="terjemahContoh()">💡 Coba Contoh</button>
+      </div>
+      <div class="converter-cols">
+        <div>
+          <div class="converter-label">Teks Indonesia</div>
+          <textarea class="converter-textarea" id="inputTerjemah"
+            placeholder="Cth: anak pergi ke sungai hari ini..." oninput="terjemahTeks()"></textarea>
+        </div>
+        <div class="arrow-col">→</div>
+        <div style="flex:1">
+          <div class="converter-label">Hasil Terjemahan</div>
+          <div class="trans-box" id="outputTerjemah">
+            <em style="color:#bbb;font-size:.83rem">Ketik teks di kiri untuk melihat terjemahan...</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- ===== KUIS ===== -->
 <div id="tab-kuis" class="tab-panel">
   <div class="kuis-mode-row">
@@ -374,7 +415,8 @@ const VKEYS = ['ai','au','ea','i','u','e','o','a'];
 const CR = 'ꤰ';
 function toKaganga(text){
   if(!text.trim())return'';
-  let r='',i=0,t=text.toLowerCase();
+  let r='',i=0,t=text.toLowerCase()
+    .replace(/f/g,'ph').replace(/q/g,'k').replace(/v/g,'w').replace(/x/g,'ks').replace(/z/g,'s');
   while(i<t.length){
     const ch=t[i];
     if(ch===' '||ch==='\n'||ch==='\r'){r+=ch;i++;continue;}
@@ -1987,6 +2029,64 @@ function jawab(pilihan){
   if(benar){fb.textContent='✅ Benar! Bagus sekali!';fb.className='feedback-msg benar';}
   else{fb.textContent=`❌ Salah. Jawaban: ${kuisSoal.jawaban}`;fb.className='feedback-msg salah';}
   setTimeout(buatSoal,1700);
+}
+
+
+// ============================================================
+// TERJEMAH
+// ============================================================
+const INDO_MAP = {};
+KOSAKATA.forEach(item => {
+  const key = item.indonesia.toLowerCase().trim();
+  if(key && !INDO_MAP[key]) INDO_MAP[key] = item;
+});
+
+function terjemahTeks(){
+  const raw = document.getElementById('inputTerjemah').value;
+  const outEl = document.getElementById('outputTerjemah');
+  if(!raw.trim()){
+    outEl.innerHTML='<em style="color:#bbb;font-size:.83rem">Ketik teks di kiri untuk melihat terjemahan...</em>';
+    return;
+  }
+  const dialek = document.getElementById('dialekTerjemah').value;
+  const words = raw.trim().toLowerCase().replace(/[.,!?;:]/g,' ').split(/\s+/).filter(w=>w);
+
+  const rej=[], kag=[], enArr=[];
+  let i=0;
+  while(i<words.length){
+    let matched=false;
+    for(let len=Math.min(3,words.length-i);len>=1;len--){
+      const phrase=words.slice(i,i+len).join(' ');
+      const hit=INDO_MAP[phrase];
+      if(hit){
+        const d=hit._dialek[dialek];
+        const rejWord=d.kata||hit.rejang||'?';
+        const kagWord=d.kaganga||toKaganga(rejWord);
+        const enWord=hit.english||'—';
+        rej.push('<span class="trans-hit">'+rejWord+'</span>');
+        kag.push('<span class="trans-hit trans-kaganga">'+kagWord+'</span>');
+        enArr.push('<span class="trans-hit">'+enWord+'</span>');
+        i+=len; matched=true; break;
+      }
+    }
+    if(!matched){
+      const w=words[i];
+      rej.push('<span class="trans-miss">['+w+']</span>');
+      kag.push('<span class="trans-miss">['+w+']</span>');
+      enArr.push('<span class="trans-miss">['+w+']</span>');
+      i++;
+    }
+  }
+
+  outEl.innerHTML=
+    '<div class="trans-row"><span class="trans-label">🏮 Rejang</span><div class="trans-val">'+rej.join(' ')+'</div></div>'+
+    '<div class="trans-row"><span class="trans-label">ꤰ Kaganga</span><div class="trans-val">'+kag.join(' ')+'</div></div>'+
+    '<div class="trans-row"><span class="trans-label">🇬🇧 Inggris</span><div class="trans-val">'+enArr.join(' ')+'</div></div>';
+}
+
+function terjemahContoh(){
+  document.getElementById('inputTerjemah').value='anak pergi ke sungai';
+  terjemahTeks();
 }
 
 // INIT
